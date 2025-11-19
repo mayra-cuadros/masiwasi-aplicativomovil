@@ -7,9 +7,9 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/Welcome"
+    android:background="@mipmap/welcome"
     android:paddingTop="510dp"
-    tools:context=".WelcomeActivity">
+    tools:context=".ui.activities.WelcomeActivity">
 
     <ImageView
         android:id="@+id/btn_welcome"

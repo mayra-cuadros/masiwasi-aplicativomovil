@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="30dp"
-    android:background="@drawable/UserProfilePage"
-    tools:context=".UserProfileActivity">
+    android:background="@mipmap/userprofilepage"
+    tools:context=".ui.activities.UserProfileActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

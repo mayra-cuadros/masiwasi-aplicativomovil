@@ -8,8 +8,8 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="20dp"
-    android:background="@drawable/LoginPage"
-    tools:context=".LoginActivity">
+    android:background="@mipmap/loginpagee"
+    tools:context=".ui.activities.LoginActivity">
 
     <TextView
         android:layout_width="wrap_content"

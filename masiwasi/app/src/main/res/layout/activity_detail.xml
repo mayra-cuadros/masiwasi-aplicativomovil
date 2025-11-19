@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/DetailPage"
-    tools:context=".DetailActivity">
+    android:background="@mipmap/detailpage"
+    tools:context=".ui.activities.DetailActivity">
 
 </LinearLayout>

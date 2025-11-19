@@ -8,8 +8,8 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:padding="30dp"
-    android:background="@drawable/UserPage"
-    tools:context=".UserActivity">
+    android:background="@mipmap/userpage"
+    tools:context=".ui.activities.UserActivity">
 
     <ImageView
         android:id="@+id/imageView"

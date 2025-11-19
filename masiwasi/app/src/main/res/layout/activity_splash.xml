@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/Splash"
-    tools:context=".SplashActivity">
+    android:background="@mipmap/splash"
+    tools:context=".ui.activities.SplashActivity">
 
 </LinearLayout>
