@@ -82,7 +82,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:backgroundTint="#923083"
+        android:backgroundTint="#764b36"
         android:text="Registrarse"
         android:textSize="15dp" />
 </LinearLayout>

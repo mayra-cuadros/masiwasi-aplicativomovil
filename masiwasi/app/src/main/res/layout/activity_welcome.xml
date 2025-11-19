@@ -9,12 +9,4 @@
     android:orientation="vertical"
     android:background="@mipmap/welcome"
     android:paddingTop="510dp"
-    tools:context=".ui.activities.WelcomeActivity">
-
-    <ImageView
-        android:id="@+id/btn_welcome"
-        android:layout_width="220dp"
-        android:layout_height="120dp"
-        android:layout_weight="1"
-        app:srcCompat="@color/design_default_color_on_primary" />
-</LinearLayout>
+    tools:context=".ui.activities.WelcomeActivity"/>

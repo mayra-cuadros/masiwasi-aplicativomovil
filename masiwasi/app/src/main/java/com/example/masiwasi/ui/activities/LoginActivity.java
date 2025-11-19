@@ -1,6 +1,11 @@
 package com.example.masiwasi.ui.activities;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,8 +14,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.masiwasi.R;
+import com.example.masiwasi.ui.fragments.HomeFragment;
 
 public class LoginActivity extends AppCompatActivity {
+    EditText email, password;
+    Button btnLogin, btnRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +30,65 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        email = findViewById(R.id.editTextTextEmailAddress);
+        password = findViewById(R.id.editTextTextPassword);
+        btnLogin = findViewById(R.id.button);
+        btnRegister = findViewById(R.id.button2);
+
+        btnLogin.setOnClickListener(v -> validarDatos());
+        btnRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, UserActivity.class);
+            startActivity(intent);
+        });
+    }
+    private void validarDatos() {
+        String correo = email.getText().toString().trim();
+        String pass = password.getText().toString().trim();
+
+        if (correo.equals("admin") && pass.equals("admin")) {
+            Toast.makeText(this, "Inicio de sesión exitoso (ADMIN)", Toast.LENGTH_SHORT).show();
+            // Abrir DetailActivity
+            Intent intent = new Intent(LoginActivity.this, UserActivity.class);
+            startActivity(intent);
+            finish(); // opcional: para que no vuelva con el botón atrás
+            return;
+        }
+
+        if (correo.isEmpty()) {
+            email.setError("Ingresa tu correo");
+            email.requestFocus();
+            return;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+            email.setError("Correo inválido");
+            email.requestFocus();
+            return;
+        }
+
+        if (pass.isEmpty()) {
+            password.setError("Ingresa tu contraseña");
+            password.requestFocus();
+            return;
+        }
+
+        SharedPreferences prefs = getSharedPreferences("USUARIO", MODE_PRIVATE);
+        String correoGuardado = prefs.getString("correo", null);
+        String passGuardada = prefs.getString("password", null);
+
+        if (correoGuardado == null) {
+            Toast.makeText(this, "No existe un usuario registrado.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (correo.equals(correoGuardado) && pass.equals(passGuardada)) {
+            Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+            // Abrir DetailActivity
+            Intent intent = new Intent(LoginActivity.this, UserActivity.class);
+            startActivity(intent);
+            finish(); // opcional
+        } else {
+            Toast.makeText(this, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+        }
     }
 }
