@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> validarDatos());
         btnRegister.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, UserActivity.class);
+            Intent intent = new Intent(LoginActivity.this, DetailActivity.class);
             startActivity(intent);
         });
     }
@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         if (correo.equals("admin") && pass.equals("admin")) {
             Toast.makeText(this, "Inicio de sesión exitoso (ADMIN)", Toast.LENGTH_SHORT).show();
             // Abrir DetailActivity
-            Intent intent = new Intent(LoginActivity.this, UserActivity.class);
+            Intent intent = new Intent(LoginActivity.this, DetailActivity.class);
             startActivity(intent);
             finish(); // opcional: para que no vuelva con el botón atrás
             return;
@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         if (correo.equals(correoGuardado) && pass.equals(passGuardada)) {
             Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
             // Abrir DetailActivity
-            Intent intent = new Intent(LoginActivity.this, UserActivity.class);
+            Intent intent = new Intent(LoginActivity.this, DetailActivity.class);
             startActivity(intent);
             finish(); // opcional
         } else {
