@@ -1,5 +1,6 @@
 package com.example.masiwasi.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -23,8 +24,14 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
 
-        // Fragment inicial
         loadFragment(new HomeFragment());
+
+        String navigateTo = getIntent().getStringExtra("navigateTo");
+
+        if ("profile".equals(navigateTo)) {
+            loadFragment(new ProfileFragment());
+            bottomNavigation.setSelectedItemId(R.id.nav_profile);
+        }
 
         bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
@@ -35,13 +42,10 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new ProfileFragment();
             } else if (id == R.id.nav_home) {
                 selectedFragment = new HomeFragment();
-            } else {
-                selectedFragment = new HomeFragment();
             }
 
             return loadFragment(selectedFragment);
         });
-
     }
 
     private boolean loadFragment(Fragment fragment) {

@@ -2,6 +2,7 @@ package com.example.masiwasi.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import models.Mascota;
 
 import com.example.masiwasi.R;
+import com.example.masiwasi.ui.fragments.ProfileFragment;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -46,10 +48,19 @@ public class DetailActivity extends AppCompatActivity {
 
         mostrarDatos(mascota);
 
+<<<<<<< HEAD
         contactar.setOnClickListener(v ->
 
                 Toast.makeText(this, "Se contactará al dueño pronto.", Toast.LENGTH_SHORT).show()
         );
+=======
+        contactar.setOnClickListener(v -> {
+            Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+            intent.putExtra("navigateTo", "profile");
+            startActivity(intent);
+            finish();
+        });
+>>>>>>> d2a69887d1f08d2d6c15f96e0ea33715e8b58a4b
     }
 
     private void mostrarDatos(Mascota mascota) {

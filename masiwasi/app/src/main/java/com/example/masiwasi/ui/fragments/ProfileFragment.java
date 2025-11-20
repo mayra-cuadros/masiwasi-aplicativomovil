@@ -157,6 +157,11 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getContext(), NewPublicationActivity.class);
             lNewPublication.launch(intent);
         });
+        btnNewPublication.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), NewPublicationActivity.class);
+            lNewPublication.launch(intent);
+        });
+
 
         btnLogout.setOnClickListener(v -> {
             Toast.makeText(getActivity(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
