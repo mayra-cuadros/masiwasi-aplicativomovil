@@ -55,19 +55,19 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="match_parent"
+        android:layout_width="189dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:backgroundTint="#764b36"
-        android:textSize="15dp"
-        android:text="Iniciar Sesión" />
+        android:text="Iniciar Sesión"
+        android:textSize="15dp" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="match_parent"
+        android:layout_width="194dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:backgroundTint="#764b36"
-        android:textSize="15dp"
-        android:text="Registrarse" />
+        android:text="Registrarse"
+        android:textSize="15dp" />
 </LinearLayout>
