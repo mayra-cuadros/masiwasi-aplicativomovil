@@ -48,19 +48,19 @@ public class DetailActivity extends AppCompatActivity {
 
         mostrarDatos(mascota);
 
-<<<<<<< HEAD
+
         contactar.setOnClickListener(v ->
 
                 Toast.makeText(this, "Se contactará al dueño pronto.", Toast.LENGTH_SHORT).show()
         );
-=======
+
         contactar.setOnClickListener(v -> {
             Intent intent = new Intent(DetailActivity.this, MainActivity.class);
             intent.putExtra("navigateTo", "profile");
             startActivity(intent);
             finish();
         });
->>>>>>> d2a69887d1f08d2d6c15f96e0ea33715e8b58a4b
+
     }
 
     private void mostrarDatos(Mascota mascota) {
