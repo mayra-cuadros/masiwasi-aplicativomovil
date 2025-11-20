@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="textPrimary">#764b36</color>
+    <color name="chipText">#b4b4b4</color>
 </resources>
