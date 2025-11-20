@@ -1,6 +1,8 @@
 package models;
 
-public class Mascota {
+import java.io.Serializable;
+
+public class Mascota implements Serializable{
     private String nombre;
     private String edad;
     private String sexo;
@@ -21,6 +23,8 @@ public class Mascota {
         this.color = color;
         this.imagen = imagen;
     }
+
+
 
     // Getters y Setters
     public String getNombre() { return nombre; }

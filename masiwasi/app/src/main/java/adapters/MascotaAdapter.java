@@ -23,7 +23,6 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
     private OnMascotaClickListener listener;
     private Context context;
 
-    // Listener para manejar el clic en "Ver/Detalles"
     public interface OnMascotaClickListener {
         void onVerDetalles(Mascota mascota);
     }
@@ -45,16 +44,26 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
     public void onBindViewHolder(@NonNull MascotaViewHolder holder, int position) {
         Mascota mascota = mascotaList.get(position);
 
-//        // imagenes
-//        if (mascota.getImagenResId() != 0) {
-//            holder.imgMascota.setImageResource(mascota.getImagenResId());
-//        }
 
+        int imageResId = context.getResources().getIdentifier(
+                mascota.getImagen(),
+                "mipmap",
+                context.getPackageName()
+        );
+
+        if (imageResId != 0) {
+            holder.imgMascota.setImageResource(imageResId);
+        } else {
+            holder.imgMascota.setImageResource(R.mipmap.mascota1);
+        }
+
+        // Datos
         holder.txtNombre.setText("Nombre: " + mascota.getNombre());
         holder.txtEdad.setText("Edad: " + mascota.getEdad());
         holder.txtSexo.setText("Sexo: " + mascota.getSexo());
         holder.txtDescripcion.setText(mascota.getDescripcion());
 
+        // Botón detalles
         holder.btnDetalles.setOnClickListener(v -> {
             if (listener != null) listener.onVerDetalles(mascota);
         });
@@ -73,6 +82,7 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
 
         public MascotaViewHolder(@NonNull View itemView) {
             super(itemView);
+
             imgMascota = itemView.findViewById(R.id.imgMascota);
             txtNombre = itemView.findViewById(R.id.txtNombreMascota);
             txtEdad = itemView.findViewById(R.id.txtEdadMascota);
