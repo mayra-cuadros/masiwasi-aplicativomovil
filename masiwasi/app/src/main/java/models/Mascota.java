@@ -2,13 +2,9 @@ package models;
 
 import java.io.Serializable;
 
-<<<<<<< HEAD
 public class Mascota implements Serializable {
 
     private String id;
-=======
-public class Mascota implements Serializable{
->>>>>>> 1e7ddf957da9e82bf59933a70d0c97dbf3c61f59
     private String nombre;
     private String edad;
     private String sexo;
@@ -35,17 +31,12 @@ public class Mascota implements Serializable{
         this.imageUrl = imageUrl;
     }
 
-<<<<<<< HEAD
     // Getters y setters
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-=======
-
-
     // Getters y Setters
->>>>>>> 1e7ddf957da9e82bf59933a70d0c97dbf3c61f59
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 

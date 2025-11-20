@@ -43,7 +43,7 @@
                 />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipBeaches"
+                android:id="@+id/chipPerro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Perro"
@@ -52,7 +52,7 @@
                 />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chipAdventure"
+                android:id="@+id/chipGato"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gato"

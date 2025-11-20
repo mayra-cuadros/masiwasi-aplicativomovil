@@ -69,7 +69,7 @@ public class DetailActivity extends AppCompatActivity {
 
         // Imagen
         int imageResId = getResources().getIdentifier(
-                mascota.getImagen(),
+                mascota.getImageUrl(),
                 "mipmap",
                 getPackageName()
         );

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+//import com.bumptech.glide.Glide;
 import com.example.masiwasi.R;
 
 import java.util.List;
@@ -52,41 +52,18 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
     public void onBindViewHolder(@NonNull MascotaViewHolder holder, int position) {
         Mascota mascota = mascotaList.get(position);
 
-<<<<<<< HEAD
         holder.txtNombre.setText(mascota.getNombre());
         holder.txtEdad.setText(mascota.getEdad());
         holder.txtSexo.setText(mascota.getSexo());
         holder.txtDescripcion.setText(mascota.getDescripcion());
 
-        Glide.with(context)
-                .load(mascota.getImageUrl())
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(holder.imgMascota);
+//        Glide.with(context)
+//                .load(mascota.getImageUrl())
+//                .placeholder(R.drawable.ic_launcher_foreground)
+//                .into(holder.imgMascota);
 
         holder.btnDetalles.setText(modoEdicion ? "Editar" : "Ver/Detalles");
 
-=======
-
-        int imageResId = context.getResources().getIdentifier(
-                mascota.getImagen(),
-                "mipmap",
-                context.getPackageName()
-        );
-
-        if (imageResId != 0) {
-            holder.imgMascota.setImageResource(imageResId);
-        } else {
-            holder.imgMascota.setImageResource(R.mipmap.mascota1);
-        }
-
-        // Datos
-        holder.txtNombre.setText("Nombre: " + mascota.getNombre());
-        holder.txtEdad.setText("Edad: " + mascota.getEdad());
-        holder.txtSexo.setText("Sexo: " + mascota.getSexo());
-        holder.txtDescripcion.setText(mascota.getDescripcion());
-
-        // Botón detalles
->>>>>>> 1e7ddf957da9e82bf59933a70d0c97dbf3c61f59
         holder.btnDetalles.setOnClickListener(v -> {
             if (listener != null) listener.onVerDetalles(mascota);
         });
@@ -105,7 +82,6 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
 
         public MascotaViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imgMascota = itemView.findViewById(R.id.imgMascota);
             txtNombre = itemView.findViewById(R.id.txtNombreMascota);
             txtEdad = itemView.findViewById(R.id.txtEdadMascota);

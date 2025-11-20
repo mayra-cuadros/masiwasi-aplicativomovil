@@ -1,14 +1,9 @@
 package com.example.masiwasi.ui.activities;
 
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.masiwasi.R;
 
@@ -23,7 +18,12 @@ public class SplashActivity extends AppCompatActivity {
 
 
         new Handler().postDelayed(() -> {
-
+//            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+////            if (currentUser != null) {
+////                goHome();
+////            } else {
+////                goLogin();
+////            }
             goHome();
 
         }, SPLASH_DELAY);

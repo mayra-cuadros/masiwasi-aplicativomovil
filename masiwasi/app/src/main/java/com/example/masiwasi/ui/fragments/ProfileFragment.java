@@ -3,6 +3,9 @@ package com.example.masiwasi.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +38,8 @@ public class ProfileFragment extends Fragment {
     private MascotaAdapter adapter;
     private boolean modoEdicion = false;
 
+    private ActivityResultLauncher<Intent> lNewPublication;
+
     public ProfileFragment() {}
 
     public static ProfileFragment newInstance() {
@@ -44,6 +49,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         imgUserProfile = view.findViewById(R.id.imgUserProfile);
@@ -72,7 +78,7 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("mascota_categoria", mascota.getCategoria());
                 intent.putExtra("mascota_color", mascota.getColor());
                 intent.putExtra("mascota_imageUrl", mascota.getImageUrl());
-                startActivity(intent);
+                lNewPublication.launch(intent);
             }
         });
 
@@ -88,9 +94,43 @@ public class ProfileFragment extends Fragment {
             adapter.setModoEdicion(modoEdicion);
         });
 
+        lNewPublication = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        String id = data.getStringExtra("mascota_id");
+                        String nombre = data.getStringExtra("mascota_nombre");
+                        String edad = data.getStringExtra("mascota_edad");
+                        String sexo = data.getStringExtra("mascota_sexo");
+                        String categoria = data.getStringExtra("mascota_categoria");
+                        String color = data.getStringExtra("mascota_color");
+                        String descripcion = data.getStringExtra("mascota_descripcion");
+                        String imageUrl = data.getStringExtra("mascota_imageUrl");
+
+                        Mascota nuevaMascota = new Mascota(id, nombre, edad, sexo, descripcion, categoria, color, imageUrl);
+
+                        boolean encontrada = false;
+                        for (int i = 0; i < mascotasList.size(); i++) {
+                            if (mascotasList.get(i).getId().equals(id)) {
+                                mascotasList.set(i, nuevaMascota); // actualización
+                                encontrada = true;
+                                break;
+                            }
+                        }
+
+                        if (!encontrada) {
+                            mascotasList.add(nuevaMascota); // nueva publicación
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+        );
+
         btnNewPublication.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), NewPublicationActivity.class);
-            startActivity(intent);
+            lNewPublication.launch(intent);
         });
 
         btnLogout.setOnClickListener(v -> {
