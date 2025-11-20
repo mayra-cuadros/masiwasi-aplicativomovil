@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/nav_profile2"
+        android:icon="@mipmap/ic_person"
+        android:title="Inicia sesion"/>
+    <item
         android:id="@+id/nav_home"
         android:icon="@mipmap/ic_home"
         android:title="Inicio"/>
@@ -10,5 +14,4 @@
         android:id="@+id/nav_profile"
         android:icon="@mipmap/ic_person"
         android:title="Perfil"/>
-
 </menu>

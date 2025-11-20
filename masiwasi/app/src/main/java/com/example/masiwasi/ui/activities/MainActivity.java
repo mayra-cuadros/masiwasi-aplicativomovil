@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigation.setSelectedItemId(R.id.nav_profile);
         }
 
+
         bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
@@ -42,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new ProfileFragment();
             } else if (id == R.id.nav_home) {
                 selectedFragment = new HomeFragment();
+            }else if(id == R.id.nav_profile2){
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.putExtra("openProfile", true);
+                startActivity(intent);
             }
 
             return loadFragment(selectedFragment);
