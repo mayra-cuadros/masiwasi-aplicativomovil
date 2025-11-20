@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.masiwasi.R;
+import com.example.masiwasi.ui.activities.DetailActivity;
 import com.example.masiwasi.ui.activities.NewPublicationActivity;
 
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ public class ProfileFragment extends Fragment {
     private List<Mascota> mascotasList = new ArrayList<>();
     private MascotaAdapter adapter;
     private boolean modoEdicion = false;
+
+    private viewmodels.ProfileViewModel profileViewModel;
+    private RecyclerView recyclerView;
 
     private ActivityResultLauncher<Intent> lNewPublication;
 
@@ -79,6 +83,27 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("mascota_color", mascota.getColor());
                 intent.putExtra("mascota_imageUrl", mascota.getImageUrl());
                 lNewPublication.launch(intent);
+            }
+        });
+
+        adapter = new MascotaAdapter(getContext(), mascotasList, modoEdicion, mascota -> {
+            if (modoEdicion) {
+                // Editar publicación
+                Intent intent = new Intent(getContext(), NewPublicationActivity.class);
+                intent.putExtra("mascota_id", mascota.getId());
+                intent.putExtra("mascota_nombre", mascota.getNombre());
+                intent.putExtra("mascota_edad", mascota.getEdad());
+                intent.putExtra("mascota_sexo", mascota.getSexo());
+                intent.putExtra("mascota_descripcion", mascota.getDescripcion());
+                intent.putExtra("mascota_categoria", mascota.getCategoria());
+                intent.putExtra("mascota_color", mascota.getColor());
+                intent.putExtra("mascota_imageUrl", mascota.getImageUrl());
+                lNewPublication.launch(intent);
+            } else {
+                // Ver detalles
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra(DetailActivity.EXTRA_MASCOTA, mascota);
+                startActivity(intent);
             }
         });
 

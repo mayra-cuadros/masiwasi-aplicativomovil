@@ -47,6 +47,7 @@ public class DetailActivity extends AppCompatActivity {
         mostrarDatos(mascota);
 
         contactar.setOnClickListener(v ->
+
                 Toast.makeText(this, "Se contactará al dueño pronto.", Toast.LENGTH_SHORT).show()
         );
     }
