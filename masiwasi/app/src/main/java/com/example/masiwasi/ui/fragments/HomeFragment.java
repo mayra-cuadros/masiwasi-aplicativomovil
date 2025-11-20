@@ -1,5 +1,6 @@
 package com.example.masiwasi.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.masiwasi.R;
+import com.example.masiwasi.ui.activities.DetailActivity;
 import com.google.android.material.chip.Chip;
 
 
@@ -43,6 +45,10 @@ public class HomeFragment extends Fragment {
         homeViewModel.getMascotas().observe(getViewLifecycleOwner(), mascotas -> {
             adapter = new adapters.MascotaAdapter(requireContext(), mascotas, false, mascota -> {
                 Toast.makeText(requireContext(), "Ver: " + mascota.getNombre(), Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(requireContext(), DetailActivity.class);
+                intent.putExtra(DetailActivity.EXTRA_MASCOTA, mascota);
+                startActivity(intent);
             });
             recyclerView.setAdapter(adapter);
         });

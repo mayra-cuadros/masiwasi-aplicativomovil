@@ -24,7 +24,7 @@
             android:id="@+id/txtNombreMascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre: Demi"
+            android:text="Nombre de la mascota"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginTop="8dp" />
@@ -33,7 +33,7 @@
             android:id="@+id/txtEdadMascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edad: 8 meses"
+            android:text="Edad de la mascota"
             android:textSize="16sp"
             android:layout_marginTop="2dp" />
 
@@ -41,7 +41,7 @@
             android:id="@+id/txtSexoMascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sexo: Hembra"
+            android:text="Sexo de la mascota"
             android:textSize="16sp"
             android:layout_marginTop="2dp" />
 
@@ -49,7 +49,7 @@
             android:id="@+id/txtDescripcionMascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pequeña y juguetona, ideal para familia."
+            android:text="Descripción de la mascota"
             android:textSize="14sp"
             android:layout_marginTop="4dp" />
 
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
-            android:backgroundTint="#F44336"
+            android:backgroundTint="#A84F36"
             android:paddingHorizontal="16dp"
             android:paddingVertical="6dp"
             android:text="Ver/Detalles"

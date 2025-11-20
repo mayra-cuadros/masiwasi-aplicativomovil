@@ -15,6 +15,8 @@ import com.example.masiwasi.R;
 
 public class DetailActivity extends AppCompatActivity {
 
+    public static final String EXTRA_MASCOTA = "mascota";
+
     private ImageView fotoMascota;
     private TextView nombreMascota, sexo, edad, categoria, color, descripcion;
     private Button contactar;
