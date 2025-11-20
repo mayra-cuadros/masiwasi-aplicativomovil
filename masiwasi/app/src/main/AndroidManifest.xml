@@ -16,7 +16,7 @@
             android:name=".ui.activities.DetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.NewAdoptActivity"
+            android:name=".ui.activities.NewPublicationActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activities.SplashActivity"
