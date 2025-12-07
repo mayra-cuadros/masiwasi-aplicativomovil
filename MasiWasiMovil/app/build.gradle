@@ -1,20 +1,19 @@
 plugins {
     alias(libs.plugins.android.application)
-    id 'com.google.gms.google-services'
 }
 
 android {
-    namespace 'com.example.masiwasimovil'
-    compileSdk 35
+    namespace= 'com.example.masiwasimovil'
+    compileSdk= 36
 
     defaultConfig {
         applicationId "com.example.masiwasimovil"
         minSdk 24
-        targetSdk 35
+        targetSdk= 36
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner"androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
