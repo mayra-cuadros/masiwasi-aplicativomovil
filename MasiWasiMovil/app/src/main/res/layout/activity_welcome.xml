@@ -9,4 +9,4 @@
     android:orientation="vertical"
     android:background="@mipmap/welcome"
     android:paddingTop="510dp"
-    tools:context=".ui.activities.WelcomeActivity"/>
+    tools:context=".activities.WelcomeActivity"/>

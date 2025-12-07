@@ -9,7 +9,7 @@
     android:gravity="center_horizontal"
     android:padding="30dp"
     android:background="@mipmap/userpage"
-    tools:context=".ui.activities.UserActivity">
+    tools:context=".activities.UserActivity">
 
     <ImageView
         android:id="@+id/imageView"

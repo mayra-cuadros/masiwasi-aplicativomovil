@@ -9,7 +9,7 @@
     android:gravity="center"
     android:padding="50dp"
     android:background="@mipmap/registerpage"
-    tools:context=".ui.activities.RegisterActivity">
+    tools:context=".activities.RegisterActivity">
 
     <TextView
         android:layout_width="wrap_content"

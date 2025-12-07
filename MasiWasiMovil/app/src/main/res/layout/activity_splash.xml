@@ -8,6 +8,6 @@
     android:gravity="center"
     android:orientation="vertical"
     android:background="@mipmap/splash"
-    tools:context=".ui.activities.SplashActivity">
+    tools:context=".activities.SplashActivity">
 
 </LinearLayout>
