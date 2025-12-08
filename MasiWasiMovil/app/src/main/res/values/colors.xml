@@ -3,5 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="textPrimary">#764b36</color>
+    <color name="secundaryPrimary">#F8DCCE</color>
+    <color name="home">#d7ae95</color>
+    <color name="fondoPrimary">#f1cea4</color>
+    <color name="fondoPerfil">#6c96b4</color>
+    <color name="fondoNew">#b4b5ff</color>
     <color name="chipText">#b4b4b4</color>
 </resources>

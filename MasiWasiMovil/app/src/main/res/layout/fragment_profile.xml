@@ -1,106 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/userpage"
     tools:context=".fragments.ProfileFragment">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBarProfile"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="top"
+        android:background="@color/fondoPerfil"
+        android:elevation="8dp"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:layout_marginTop="56dp"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"
+        android:fillViewport="true">
 
-        <!-- Info Usuario -->
+    <LinearLayout
+        android:id="@+id/home_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:background="@mipmap/userpage"
+        android:padding="16dp">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_height="169dp"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingBottom="16dp">
 
             <ImageView
                 android:id="@+id/imgUserProfile"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="100dp"
+                android:background="@drawable/ic_launcher_background"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_foreground"
-                android:background="@drawable/ic_launcher_background" />
+                android:src="@drawable/ic_launcher_foreground" />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:paddingStart="16dp">
 
                 <TextView
+                    android:id="@+id/txtUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtUserName"
                     android:text="Mark Z."
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txtUserEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtUserEmail"
+                    android:layout_marginTop="4dp"
                     android:text="mark@gmail.com"
-                    android:textSize="16sp"
-                    android:layout_marginTop="4dp" />
+                    android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/txtUserLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtUserLocation"
+                    android:layout_marginTop="2dp"
                     android:text="Lima, Perú"
-                    android:textSize="16sp"
-                    android:layout_marginTop="2dp" />
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Botones de acción -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_height="140dp"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingBottom="16dp">
 
             <Button
                 android:id="@+id/btnEditProfile"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Editar publicación" />
+                android:layout_weight="1"
+                android:text="Editar perfil" />
 
             <Button
                 android:id="@+id/btnNewPublication"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Nueva publicación"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Nueva publicación" />
 
             <Button
                 android:id="@+id/btnLogout"
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Cerrar sesión"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Cerrar sesión" />
         </LinearLayout>
 
-        <!-- RecyclerView para mostrar mascotas -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvUserPets"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:layout_marginTop="36dp"
-            android:paddingBottom="16dp" />
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:paddingBottom="16dp"
+            android:layout_marginTop="36dp" />
+
     </LinearLayout>
-</FrameLayout>
+</ScrollView>
+
+    </FrameLayout>
