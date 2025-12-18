@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-       
+
         mAuth = FirebaseAuth.getInstance();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
