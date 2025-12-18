@@ -129,15 +129,12 @@ public class ProfileFragment extends Fragment {
 
         // Configurar RecyclerView
         rvUserPets.setLayoutManager(new LinearLayoutManager(getContext()));
-
         adapter = new MascotaAdapter(getContext(), mascotasList, modoEdicion, mascota -> {
             if (modoEdicion) {
-                // Ir a editar (Firebase)
                 Intent intent = new Intent(getContext(), NewPublicationActivity.class);
                 intent.putExtra("mascota_id", mascota.getId());
                 startActivity(intent);
             } else {
-                // Ver detalles
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra("EXTRA_MASCOTA", mascota);
                 startActivity(intent);
@@ -145,10 +142,30 @@ public class ProfileFragment extends Fragment {
         });
         rvUserPets.setAdapter(adapter);
 
-        // Cargar datos del usuario logueado
+        // CARGAR DATOS DEL USUARIO
         if (mAuth.getCurrentUser() != null) {
-            txtUserEmail.setText(mAuth.getCurrentUser().getEmail());
-            txtUserName.setText(mAuth.getCurrentUser().getDisplayName() != null ? mAuth.getCurrentUser().getDisplayName() : "Usuario");
+            String userId = mAuth.getCurrentUser().getUid();
+
+            // 1. Intentar obtener TODO de Firestore (incluyendo dirección)
+            db.collection("usuarios").document(userId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String nombre = documentSnapshot.getString("nombre");
+                            String correo = documentSnapshot.getString("correo");
+                            String direccion = documentSnapshot.getString("direccion");
+
+                            txtUserName.setText(nombre != null ? nombre : "Usuario");
+                            txtUserEmail.setText(correo != null ? correo : mAuth.getCurrentUser().getEmail());
+                            txtUserLocation.setText(direccion != null ? direccion : "Dirección no disponible");
+                        } else {
+                            // Si el documento no existe en Firestore, usamos lo básico de Auth
+                            txtUserEmail.setText(mAuth.getCurrentUser().getEmail());
+                            txtUserName.setText(mAuth.getCurrentUser().getDisplayName());
+                            txtUserLocation.setText("Sin dirección registrada");
+                        }
+                    });
+
+            // 2. Cargar las mascotas del usuario
             escucharPublicaciones();
         }
 
@@ -194,9 +211,15 @@ public class ProfileFragment extends Fragment {
 
         String userId = mAuth.getCurrentUser().getUid();
 
+<<<<<<< HEAD
+        //Escucha cambios en tiempo real en Firestore
+        db.collection("mascotas")
+                .whereEqualTo("duenoId", userId)
+=======
 
         db.collection("publicaciones")
                 .whereEqualTo("dueñoId", userId)
+>>>>>>> 6c5e6e54ca199bde83fb673562e80cb2e3a0969e
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         // Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show(); // Comentado para no molestar si falla la red

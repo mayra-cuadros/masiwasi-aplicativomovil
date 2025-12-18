@@ -193,7 +193,7 @@ public class NewPublicationActivity extends AppCompatActivity {
         mascota.setImageUrl(urlImagen);
         mascota.setDuenoId(userId);
 
-        db.collection("publicaciones").add(mascota)
+        db.collection("mascotas").add(mascota)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(this, "Publicación exitosa", Toast.LENGTH_SHORT).show();
                     finish();
