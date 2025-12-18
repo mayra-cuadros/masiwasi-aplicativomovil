@@ -50,18 +50,34 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
 
 
+
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Bundle extras = result.getData().getExtras();
-                    if (extras != null) {
-                        Bitmap imageBitmap = (Bitmap) extras.get("data");
-                       
-                        if (imgUserProfile != null) {
-                            imgUserProfile.setImageBitmap(imageBitmap);
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null && result.getData().getExtras() != null) {
+                        Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
+
+                        if (imageBitmap != null) {
+
+                            if (imgUserProfile != null) {
+
+                                imgUserProfile.setBackground(null);
+
+                                imgUserProfile.setImageBitmap(imageBitmap);
+
+                                imgUserProfile.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                                Toast.makeText(getContext(), "¡Foto cargada exitosamente!", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Error: La cámara no devolvió imagen", Toast.LENGTH_LONG).show();
                         }
+                    } else {
+                        Toast.makeText(getContext(), "Error: Datos de cámara vacíos", Toast.LENGTH_LONG).show();
                     }
+                } else {
+                    Toast.makeText(getContext(), "Acción cancelada", Toast.LENGTH_SHORT).show();
                 }
             }
     );
