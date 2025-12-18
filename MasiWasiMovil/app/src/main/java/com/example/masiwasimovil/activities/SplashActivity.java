@@ -7,6 +7,8 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.masiwasimovil.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -19,12 +21,12 @@ public class SplashActivity extends AppCompatActivity {
 
 
         new Handler().postDelayed(() -> {
-//            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-////            if (currentUser != null) {
-////                goHome();
-////            } else {
-////                goLogin();
-////            }
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//            if (currentUser != null) {
+//                goHome();
+//            } else {
+//                goLogin();
+//            }
             goHome();
 
         }, SPLASH_DELAY);

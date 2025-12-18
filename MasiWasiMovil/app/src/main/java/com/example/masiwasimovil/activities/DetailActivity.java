@@ -9,13 +9,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.masiwasimovil.R;
 
-import models.Mascota;
-
 public class DetailActivity extends AppCompatActivity {
-
-    public static final String EXTRA_MASCOTA = "mascota";
 
     private ImageView fotoMascota;
     private TextView nombreMascota, sexo, edad, categoria, color, descripcion;
@@ -24,8 +21,9 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.example.masiwasimovil.R.layout.activity_detail);
+        setContentView(R.layout.activity_detail);
 
+        // 1. Inicializar vistas
         fotoMascota = findViewById(R.id.fotoMascota);
         nombreMascota = findViewById(R.id.nombreMascota);
         sexo = findViewById(R.id.sexo);
@@ -35,61 +33,51 @@ public class DetailActivity extends AppCompatActivity {
         descripcion = findViewById(R.id.descripcion);
         contactar = findViewById(R.id.contactar);
 
-        // Obtener objeto enviado
-        Mascota mascota = (Mascota) getIntent().getSerializableExtra("mascota");
+        // 2. Obtener los datos del Intent (deben coincidir con las llaves de HomeFragment)
+        String nombre = getIntent().getStringExtra("nombre");
+        String desc = getIntent().getStringExtra("descripcion");
+        String url = getIntent().getStringExtra("imagenUrl");
 
-        if (mascota == null) {
+        // Si pasaste más datos, recíbelos aquí también:
+        String sexoTxt = getIntent().getStringExtra("sexo");
+        String edadTxt = getIntent().getStringExtra("edad");
+        String catTxt = getIntent().getStringExtra("categoria");
+        String colorTxt = getIntent().getStringExtra("color");
+
+        // 3. Validar y mostrar
+        if (nombre == null) {
             Toast.makeText(this, "Error al cargar datos", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        mostrarDatos(mascota);
+        llenarPantalla(nombre, desc, url, sexoTxt, edadTxt, catTxt, colorTxt);
 
-        contactar.setOnClickListener(v ->
-
-                Toast.makeText(this, "Se contactará al dueño pronto.", Toast.LENGTH_SHORT).show()
-        );
-
+        // 4. Configurar botón contactar
         contactar.setOnClickListener(v -> {
+            Toast.makeText(this, "Redirigiendo al perfil del dueño...", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(DetailActivity.this, MainActivity.class);
             intent.putExtra("navigateTo", "profile");
             startActivity(intent);
             finish();
         });
-
     }
 
-    private void mostrarDatos(Mascota mascota) {
+    private void llenarPantalla(String n, String d, String u, String s, String e, String ct, String cl) {
+        nombreMascota.setText(n);
+        descripcion.setText(d != null ? d : "Sin descripción");
 
-        // Nombre
-        nombreMascota.setText(
-                mascota.getNombre() != null ? mascota.getNombre() : "Sin nombre"
-        );
+        // Llenar campos extra (con validación de nulos)
+        sexo.setText("Sexo: " + (s != null ? s : "N/A"));
+        edad.setText("Edad: " + (e != null ? e : "N/A"));
+        categoria.setText("Categoría: " + (ct != null ? ct : "N/A"));
+        color.setText("Color: " + (cl != null ? cl : "N/A"));
 
-        // Chips
-        sexo.setText("Sexo: " + (mascota.getSexo() != null ? mascota.getSexo() : "No especificado"));
-        edad.setText("Edad: " + (mascota.getEdad() != null ? mascota.getEdad() : "No especificado"));
-        categoria.setText("Categoría: " + (mascota.getCategoria() != null ? mascota.getCategoria() : "No especificado"));
-        color.setText("Color: " + (mascota.getColor() != null ? mascota.getColor() : "No especificado"));
-
-        // Descripción
-        descripcion.setText(
-                mascota.getDescripcion() != null ? mascota.getDescripcion() : "Sin descripción"
-        );
-
-        // Imagen
-        int imageResId = getResources().getIdentifier(
-                mascota.getImageUrl(),
-                "mipmap",
-                getPackageName()
-        );
-
-        if (imageResId != 0) {
-            fotoMascota.setImageResource(imageResId);
-        } else {
-            fotoMascota.setImageResource(R.mipmap.mascota1);
-        }
-
+        // 5. CARGA DE IMAGEN REAL DESDE FIREBASE
+        Glide.with(this)
+                .load(u) // La URL que llega de Firestore
+                .placeholder(R.drawable.ic_launcher_foreground) // Imagen temporal
+                .error(R.mipmap.mascota1) // Si no hay foto, usa la de respaldo
+                .into(fotoMascota);
     }
 }

@@ -25,6 +25,7 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
     private Context context;
     private boolean modoEdicion;
 
+    // 1. INTERFAZ LIMPIA (Sin código de Intent aquí dentro)
     public interface OnMascotaClickListener {
         void onVerDetalles(Mascota mascota);
     }
@@ -38,7 +39,7 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
 
     public void setModoEdicion(boolean modoEdicion) {
         this.modoEdicion = modoEdicion;
-        notifyDataSetChanged(); // Actualiza el botón de cada item
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -52,30 +53,36 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
     public void onBindViewHolder(@NonNull MascotaViewHolder holder, int position) {
         Mascota mascota = mascotaList.get(position);
 
+        // Llenado de textos
         holder.txtNombre.setText(mascota.getNombre());
         holder.txtEdad.setText(mascota.getEdad());
         holder.txtSexo.setText(mascota.getSexo());
         holder.txtDescripcion.setText(mascota.getDescripcion());
 
+        // 2. CARGA DE IMAGEN (Revisa que getImageUrl() coincida con el nombre en Firebase)
         Glide.with(context)
                 .load(mascota.getImageUrl())
-                .placeholder(R.drawable.ic_launcher_foreground)
+                .placeholder(R.drawable.ic_launcher_foreground) // Imagen mientras carga
+                .error(android.R.drawable.stat_notify_error)     // Imagen si falla
                 .into(holder.imgMascota);
 
+        // Configuración del botón
         holder.btnDetalles.setText(modoEdicion ? "Editar" : "Ver/Detalles");
 
+        // 3. EVENTO CLIC (Envía la mascota al listener)
         holder.btnDetalles.setOnClickListener(v -> {
-            if (listener != null) listener.onVerDetalles(mascota);
+            if (listener != null) {
+                listener.onVerDetalles(mascota);
+            }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mascotaList.size();
+        return mascotaList != null ? mascotaList.size() : 0;
     }
 
     public static class MascotaViewHolder extends RecyclerView.ViewHolder {
-
         ImageView imgMascota;
         TextView txtNombre, txtEdad, txtSexo, txtDescripcion;
         Button btnDetalles;

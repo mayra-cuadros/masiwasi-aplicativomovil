@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,12 +15,15 @@ import com.example.masiwasimovil.R;
 import com.example.masiwasimovil.activities.DetailActivity;
 import com.google.android.material.chip.Chip;
 
+import java.util.ArrayList;
+
+import adapters.MascotaAdapter;
 
 public class HomeFragment extends Fragment {
 
     private viewmodels.HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
-    private adapters.MascotaAdapter adapter;
+    private MascotaAdapter adapter; // Usamos la variable global que ya declaraste arriba
 
     private Chip chipAll, chipPerro, chipGato;
 
@@ -31,28 +33,40 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // 1. Inicializar vistas
         recyclerView = view.findViewById(R.id.recyclerViewDestinations);
-
         chipAll = view.findViewById(R.id.chipAll);
         chipPerro = view.findViewById(R.id.chipPerro);
         chipGato = view.findViewById(R.id.chipGato);
 
+        // 2. Configurar RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setHasFixedSize(true);
 
+        // 3. Configurar ViewModel
         homeViewModel = new ViewModelProvider(this).get(viewmodels.HomeViewModel.class);
 
+        // 4. EL ADAPTER VA AQUÍ: Se activa cuando llegan los datos
         homeViewModel.getMascotas().observe(getViewLifecycleOwner(), mascotas -> {
-            adapter = new adapters.MascotaAdapter(requireContext(), mascotas, false, mascota -> {
-                Toast.makeText(requireContext(), "Ver: " + mascota.getNombre(), Toast.LENGTH_SHORT).show();
+            if (mascotas != null) {
+                // Inicializamos el adaptador con la lista real y el listener de navegación
+                adapter = new MascotaAdapter(requireContext(), mascotas, false, mascota -> {
+                    Intent intent = new Intent(requireContext(), DetailActivity.class);
+                    intent.putExtra("nombre", mascota.getNombre());
+                    intent.putExtra("descripcion", mascota.getDescripcion());
+                    intent.putExtra("imagenUrl", mascota.getImageUrl());
+                    intent.putExtra("sexo", mascota.getSexo());
+                    intent.putExtra("edad", mascota.getEdad());
+                    intent.putExtra("categoria", mascota.getCategoria());
+                    intent.putExtra("color", mascota.getColor());
+                    startActivity(intent);
+                });
 
-                Intent intent = new Intent(requireContext(), DetailActivity.class);
-                intent.putExtra(DetailActivity.EXTRA_MASCOTA, mascota);
-                startActivity(intent);
-            });
-            recyclerView.setAdapter(adapter);
+                recyclerView.setAdapter(adapter);
+            }
         });
 
+        // 5. Filtros
         chipAll.setOnClickListener(v -> homeViewModel.filterBy("Todos"));
         chipPerro.setOnClickListener(v -> homeViewModel.filterBy("Perro"));
         chipGato.setOnClickListener(v -> homeViewModel.filterBy("Gato"));
