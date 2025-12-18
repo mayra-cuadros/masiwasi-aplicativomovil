@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             }
     );
 
-    // 2. Lanzador para la Galería
+
     private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {

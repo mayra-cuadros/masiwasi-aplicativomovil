@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query; // Importante para ordenar
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,33 +17,34 @@ public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<List<Mascota>> mascotasLiveData = new MutableLiveData<>();
     private final List<Mascota> mascotasOriginal = new ArrayList<>();
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance(); // Inicializamos Firestore
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public HomeViewModel() {
         cargarDatosDesdeFirestore();
     }
 
     private void cargarDatosDesdeFirestore() {
-        // Escucha la colección "publicaciones" en tiempo real
-        db.collection("mascotas").addSnapshotListener((value, error) -> {
-            if (error != null) {
-                return;
-            }
 
-            if (value != null) {
-                mascotasOriginal.clear();
-                for (DocumentSnapshot doc : value.getDocuments()) {
-                    // Convertimos cada documento de Firestore a un objeto Mascota
-                    Mascota m = doc.toObject(Mascota.class);
-                    if (m != null) {
-                        m.setId(doc.getId()); // Guardamos el ID del documento
-                        mascotasOriginal.add(m);
+        db.collection("mascotas")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        return;
                     }
-                }
-                // Actualizamos el LiveData con la lista completa de la base de datos
-                mascotasLiveData.setValue(new ArrayList<>(mascotasOriginal));
-            }
-        });
+
+                    if (value != null) {
+                        mascotasOriginal.clear();
+                        for (DocumentSnapshot doc : value.getDocuments()) {
+
+                            Mascota m = doc.toObject(Mascota.class);
+                            if (m != null) {
+                                m.setId(doc.getId());
+                                mascotasOriginal.add(m);
+                            }
+                        }
+
+                        mascotasLiveData.setValue(new ArrayList<>(mascotasOriginal));
+                    }
+                });
     }
 
     public LiveData<List<Mascota>> getMascotas() {
@@ -55,8 +57,8 @@ public class HomeViewModel extends ViewModel {
         } else {
             List<Mascota> filtradas = new ArrayList<>();
             for (Mascota m : mascotasOriginal) {
-                // Comparamos con el campo "categoria" que viene de Firestore
-                if (m.getCategoria() != null && m.getCategoria().equalsIgnoreCase(categoria)) {
+
+                if (m.getCategoria() != null && m.getCategoria().trim().equalsIgnoreCase(categoria)) {
                     filtradas.add(m);
                 }
             }

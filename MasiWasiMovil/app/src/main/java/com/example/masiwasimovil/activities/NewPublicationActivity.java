@@ -150,21 +150,30 @@ public class NewPublicationActivity extends AppCompatActivity {
         String nombre = edtNombre.getText().toString().trim();
         String edad = edtEdad.getText().toString().trim();
 
-        if (nombre.isEmpty() || imageUri == null) {
-            Toast.makeText(this, "Nombre e imagen son obligatorios", Toast.LENGTH_SHORT).show();
+
+        // ANTES: if (nombre.isEmpty() || imageUri == null) {
+        if (nombre.isEmpty()) {
+            Toast.makeText(this, "El nombre es obligatorio", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Subir Imagen a Storage
-        StorageReference folder = storage.getReference().child("fotos_mascotas");
-        StorageReference fileName = folder.child("img_" + System.currentTimeMillis());
 
-        fileName.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
-            fileName.getDownloadUrl().addOnSuccessListener(uri -> {
-                // Una vez que tenemos la URL, guardamos en Firestore
-                subirDatos(nombre, edad, uri.toString());
-            });
-        }).addOnFailureListener(e -> Toast.makeText(this, "Error al subir imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        if (imageUri != null) {
+
+            StorageReference folder = storage.getReference().child("fotos_mascotas");
+            StorageReference fileName = folder.child("img_" + System.currentTimeMillis());
+
+            fileName.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                fileName.getDownloadUrl().addOnSuccessListener(uri -> {
+
+                    subirDatos(nombre, edad, uri.toString());
+                });
+            }).addOnFailureListener(e -> Toast.makeText(this, "Error al subir imagen: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
+        } else {
+
+            subirDatos(nombre, edad, null);
+        }
     }
 
     private void subirDatos(String nombre, String edad, String urlImagen) {
@@ -179,6 +188,7 @@ public class NewPublicationActivity extends AppCompatActivity {
         mascota.setCategoria(edtCategoria.getText().toString());
         mascota.setColor(edtColor.getText().toString());
         mascota.setDescripcion(edtDescripcion.getText().toString());
+        // Aquí se guardará la URL si existe, o null si no existe.
         mascota.setImageUrl(urlImagen);
         mascota.setDuenoId(userId);
 

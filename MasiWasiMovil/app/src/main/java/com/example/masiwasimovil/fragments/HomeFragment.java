@@ -23,7 +23,7 @@ public class HomeFragment extends Fragment {
 
     private viewmodels.HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
-    private MascotaAdapter adapter; // Usamos la variable global que ya declaraste arriba
+    private MascotaAdapter adapter;
 
     private Chip chipAll, chipPerro, chipGato;
 
@@ -33,23 +33,23 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // 1. Inicializar vistas
+
         recyclerView = view.findViewById(R.id.recyclerViewDestinations);
         chipAll = view.findViewById(R.id.chipAll);
         chipPerro = view.findViewById(R.id.chipPerro);
         chipGato = view.findViewById(R.id.chipGato);
 
-        // 2. Configurar RecyclerView
+
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setHasFixedSize(true);
 
-        // 3. Configurar ViewModel
+
         homeViewModel = new ViewModelProvider(this).get(viewmodels.HomeViewModel.class);
 
-        // 4. EL ADAPTER VA AQUÍ: Se activa cuando llegan los datos
+
         homeViewModel.getMascotas().observe(getViewLifecycleOwner(), mascotas -> {
             if (mascotas != null) {
-                // Inicializamos el adaptador con la lista real y el listener de navegación
+
                 adapter = new MascotaAdapter(requireContext(), mascotas, false, mascota -> {
                     Intent intent = new Intent(requireContext(), DetailActivity.class);
                     intent.putExtra("nombre", mascota.getNombre());
@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // 5. Filtros
+
         chipAll.setOnClickListener(v -> homeViewModel.filterBy("Todos"));
         chipPerro.setOnClickListener(v -> homeViewModel.filterBy("Perro"));
         chipGato.setOnClickListener(v -> homeViewModel.filterBy("Gato"));

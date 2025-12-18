@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // 2. Revisar si el usuario ya está logueado para entrar directo
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             irAMain();
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Inicializar Firebase Auth
+       
         mAuth = FirebaseAuth.getInstance();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -71,13 +71,12 @@ public class LoginActivity extends AppCompatActivity {
         String correo = email.getText().toString().trim();
         String pass = password.getText().toString().trim();
 
-        // Validaciones básicas de campos
+
         if (correo.isEmpty() || pass.isEmpty()) {
             Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // INICIO DE SESIÓN CON FIREBASE
         mAuth.signInWithEmailAndPassword(correo, pass)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {

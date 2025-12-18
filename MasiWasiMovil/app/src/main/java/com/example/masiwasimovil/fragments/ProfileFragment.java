@@ -25,6 +25,7 @@ import com.example.masiwasimovil.activities.NewPublicationActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +46,9 @@ public class ProfileFragment extends Fragment {
     private MascotaAdapter adapter;
     private boolean modoEdicion = false;
 
-    // Firebase
+
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-
 
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
@@ -59,29 +59,19 @@ public class ProfileFragment extends Fragment {
                         Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
 
                         if (imageBitmap != null) {
-
                             if (imgUserProfile != null) {
-
                                 imgUserProfile.setBackground(null);
-
                                 imgUserProfile.setImageBitmap(imageBitmap);
-
                                 imgUserProfile.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
                                 Toast.makeText(getContext(), "¡Foto cargada exitosamente!", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(getContext(), "Error: La cámara no devolvió imagen", Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(getContext(), "Error: Datos de cámara vacíos", Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    Toast.makeText(getContext(), "Acción cancelada", Toast.LENGTH_SHORT).show();
                 }
             }
     );
-
 
     private final ActivityResultLauncher<String> requestCameraPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
@@ -93,7 +83,6 @@ public class ProfileFragment extends Fragment {
                 }
             }
     );
-
 
     public ProfileFragment() {}
 
@@ -107,10 +96,8 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
 
         imgUserProfile = view.findViewById(R.id.imgUserProfile);
         txtUserName = view.findViewById(R.id.txtUserName);
@@ -121,13 +108,10 @@ public class ProfileFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btnLogout);
         rvUserPets = view.findViewById(R.id.rvUserPets);
 
-
         imgUserProfile.setOnClickListener(v -> {
             requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
         });
 
-
-        // Configurar RecyclerView
         rvUserPets.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MascotaAdapter(getContext(), mascotasList, modoEdicion, mascota -> {
             if (modoEdicion) {
@@ -142,11 +126,11 @@ public class ProfileFragment extends Fragment {
         });
         rvUserPets.setAdapter(adapter);
 
-        // CARGAR DATOS DEL USUARIO
+
         if (mAuth.getCurrentUser() != null) {
             String userId = mAuth.getCurrentUser().getUid();
 
-            // 1. Intentar obtener TODO de Firestore (incluyendo dirección)
+
             db.collection("usuarios").document(userId).get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
@@ -158,23 +142,20 @@ public class ProfileFragment extends Fragment {
                             txtUserEmail.setText(correo != null ? correo : mAuth.getCurrentUser().getEmail());
                             txtUserLocation.setText(direccion != null ? direccion : "Dirección no disponible");
                         } else {
-                            // Si el documento no existe en Firestore, usamos lo básico de Auth
                             txtUserEmail.setText(mAuth.getCurrentUser().getEmail());
                             txtUserName.setText(mAuth.getCurrentUser().getDisplayName());
                             txtUserLocation.setText("Sin dirección registrada");
                         }
                     });
 
-            // 2. Cargar las mascotas del usuario
+
             escucharPublicaciones();
         }
 
-        // Botón Nueva Publicación
         btnNewPublication.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), NewPublicationActivity.class));
         });
 
-        // Botón Modo Edición
         btnEditProfile.setOnClickListener(v -> {
             modoEdicion = !modoEdicion;
             adapter.setModoEdicion(modoEdicion);
@@ -189,15 +170,11 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-
-
     private void abrirCamara() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         if (getActivity() != null && intent.resolveActivity(getActivity().getPackageManager()) != null) {
             cameraLauncher.launch(intent);
         } else {
-
             try {
                 cameraLauncher.launch(intent);
             } catch (Exception e) {
@@ -206,23 +183,17 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+
     private void escucharPublicaciones() {
         if (mAuth.getCurrentUser() == null) return;
 
         String userId = mAuth.getCurrentUser().getUid();
 
-<<<<<<< HEAD
-        //Escucha cambios en tiempo real en Firestore
+
         db.collection("mascotas")
                 .whereEqualTo("duenoId", userId)
-=======
-
-        db.collection("publicaciones")
-                .whereEqualTo("dueñoId", userId)
->>>>>>> 6c5e6e54ca199bde83fb673562e80cb2e3a0969e
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        // Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show(); // Comentado para no molestar si falla la red
                         return;
                     }
 
@@ -235,7 +206,13 @@ public class ProfileFragment extends Fragment {
                                 mascotasList.add(mascota);
                             }
                         }
+
                         adapter.notifyDataSetChanged();
+
+
+                        if (mascotasList.isEmpty()) {
+                           Toast.makeText(getContext(), "No tienes mascotas registradas aún", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }

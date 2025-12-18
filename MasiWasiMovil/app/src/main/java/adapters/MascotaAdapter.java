@@ -25,7 +25,7 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
     private Context context;
     private boolean modoEdicion;
 
-    // 1. INTERFAZ LIMPIA (Sin código de Intent aquí dentro)
+
     public interface OnMascotaClickListener {
         void onVerDetalles(Mascota mascota);
     }
@@ -49,27 +49,36 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
         return new MascotaViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull MascotaViewHolder holder, int position) {
         Mascota mascota = mascotaList.get(position);
 
-        // Llenado de textos
+
         holder.txtNombre.setText(mascota.getNombre());
         holder.txtEdad.setText(mascota.getEdad());
         holder.txtSexo.setText(mascota.getSexo());
         holder.txtDescripcion.setText(mascota.getDescripcion());
 
-        // 2. CARGA DE IMAGEN (Revisa que getImageUrl() coincida con el nombre en Firebase)
-        Glide.with(context)
-                .load(mascota.getImageUrl())
-                .placeholder(R.drawable.ic_launcher_foreground) // Imagen mientras carga
-                .error(android.R.drawable.stat_notify_error)     // Imagen si falla
-                .into(holder.imgMascota);
 
-        // Configuración del botón
+        String imageUrl = mascota.getImageUrl();
+
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .error(android.R.drawable.stat_notify_error)
+                    .centerCrop()
+                    .into(holder.imgMascota);
+        } else {
+
+
+            holder.imgMascota.setImageResource(R.drawable.ic_launcher_foreground);
+        }
+
         holder.btnDetalles.setText(modoEdicion ? "Editar" : "Ver/Detalles");
 
-        // 3. EVENTO CLIC (Envía la mascota al listener)
         holder.btnDetalles.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onVerDetalles(mascota);
