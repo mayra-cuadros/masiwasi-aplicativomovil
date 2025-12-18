@@ -28,22 +28,41 @@
             android:orientation="vertical"
             android:padding="12dp">
 
-            <ImageView
-                android:id="@+id/imgMascota"
-                android:layout_width="220dp"
-                android:layout_height="220dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/ic_launcher_background"
-                android:padding="8dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher" />
-
-            <Button
-                android:id="@+id/btnChangeImage"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Subir Imagen" />
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="50dp"
+                android:elevation="10dp">
+
+
+
+                <ImageView
+                    android:id="@+id/imvPhoto"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#CCCCCC" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnOpenCamara"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CÃ¡mara" />
+
+                    <Button
+                        android:id="@+id/btnOpenGalery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="GalerÃ­a" />
+                </LinearLayout>
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/edtNombre"
@@ -72,7 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Categoría / Tipo" />
+                android:hint="CategorÃ­a / Tipo" />
 
             <EditText
                 android:id="@+id/edtColor"
@@ -86,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Descripción"
+                android:hint="DescripciÃ³n"
                 android:inputType="textMultiLine"
                 android:minLines="3" />
 
