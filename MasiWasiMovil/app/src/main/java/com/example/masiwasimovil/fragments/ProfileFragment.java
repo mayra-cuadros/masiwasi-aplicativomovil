@@ -19,6 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.masiwasimovil.R;
 import com.example.masiwasimovil.activities.DetailActivity;
 import com.example.masiwasimovil.activities.NewPublicationActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +40,9 @@ public class ProfileFragment extends Fragment {
     private MascotaAdapter adapter;
     private boolean modoEdicion = false;
 
-    private viewmodels.ProfileViewModel profileViewModel;
-    private RecyclerView recyclerView;
-
-    private ActivityResultLauncher<Intent> lNewPublication;
+    // Firebase
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     public ProfileFragment() {}
 
@@ -54,6 +56,11 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        // Inicializar Firebase
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        // Referenciar Vistas
         imgUserProfile = view.findViewById(R.id.imgUserProfile);
         txtUserName = view.findViewById(R.id.txtUserName);
         txtUserEmail = view.findViewById(R.id.txtUserEmail);
@@ -63,108 +70,74 @@ public class ProfileFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btnLogout);
         rvUserPets = view.findViewById(R.id.rvUserPets);
 
+        // Configurar RecyclerView
         rvUserPets.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Datos de prueba
-        mascotasList.add(new Mascota("1","Demi", "8 meses", "Hembra", "Juguetona y dulce", "Perro", "Marrón", "https://misimagenes.com/demi.jpg"));
-        mascotasList.add(new Mascota("2","Fevi", "2 meses", "Macho", "Muy curioso y activo", "Gato", "Gris", "https://misimagenes.com/fevi.jpg"));
-
         adapter = new MascotaAdapter(getContext(), mascotasList, modoEdicion, mascota -> {
             if (modoEdicion) {
+                // Ir a editar (Firebase)
                 Intent intent = new Intent(getContext(), NewPublicationActivity.class);
                 intent.putExtra("mascota_id", mascota.getId());
-                intent.putExtra("mascota_nombre", mascota.getNombre());
-                intent.putExtra("mascota_edad", mascota.getEdad());
-                intent.putExtra("mascota_sexo", mascota.getSexo());
-                intent.putExtra("mascota_descripcion", mascota.getDescripcion());
-                intent.putExtra("mascota_categoria", mascota.getCategoria());
-                intent.putExtra("mascota_color", mascota.getColor());
-                intent.putExtra("mascota_imageUrl", mascota.getImageUrl());
-                lNewPublication.launch(intent);
-            }
-        });
-
-        adapter = new MascotaAdapter(getContext(), mascotasList, modoEdicion, mascota -> {
-            if (modoEdicion) {
-                // Editar publicación
-                Intent intent = new Intent(getContext(), NewPublicationActivity.class);
-                intent.putExtra("mascota_id", mascota.getId());
-                intent.putExtra("mascota_nombre", mascota.getNombre());
-                intent.putExtra("mascota_edad", mascota.getEdad());
-                intent.putExtra("mascota_sexo", mascota.getSexo());
-                intent.putExtra("mascota_descripcion", mascota.getDescripcion());
-                intent.putExtra("mascota_categoria", mascota.getCategoria());
-                intent.putExtra("mascota_color", mascota.getColor());
-                intent.putExtra("mascota_imageUrl", mascota.getImageUrl());
-                lNewPublication.launch(intent);
+                startActivity(intent);
             } else {
                 // Ver detalles
                 Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra(DetailActivity.EXTRA_MASCOTA, mascota);
+                intent.putExtra("EXTRA_MASCOTA", mascota);
                 startActivity(intent);
             }
         });
-
         rvUserPets.setAdapter(adapter);
 
-        txtUserName.setText("Mark Z.");
-        txtUserEmail.setText("mark@gmail.com");
-        txtUserLocation.setText("Lima, Perú");
-        imgUserProfile.setImageResource(R.drawable.ic_launcher_foreground);
+        // Cargar datos del usuario logueado
+        if (mAuth.getCurrentUser() != null) {
+            txtUserEmail.setText(mAuth.getCurrentUser().getEmail());
+            txtUserName.setText(mAuth.getCurrentUser().getDisplayName() != null ? mAuth.getCurrentUser().getDisplayName() : "Usuario");
+            escucharPublicaciones();
+        }
 
+        // Botón Nueva Publicación
+        btnNewPublication.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), NewPublicationActivity.class));
+        });
+
+        // Botón Modo Edición
         btnEditProfile.setOnClickListener(v -> {
             modoEdicion = !modoEdicion;
             adapter.setModoEdicion(modoEdicion);
+            btnEditProfile.setText(modoEdicion ? "Finalizar" : "Editar Publicaciones");
         });
-
-        lNewPublication = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
-                        Intent data = result.getData();
-                        String id = data.getStringExtra("mascota_id");
-                        String nombre = data.getStringExtra("mascota_nombre");
-                        String edad = data.getStringExtra("mascota_edad");
-                        String sexo = data.getStringExtra("mascota_sexo");
-                        String categoria = data.getStringExtra("mascota_categoria");
-                        String color = data.getStringExtra("mascota_color");
-                        String descripcion = data.getStringExtra("mascota_descripcion");
-                        String imageUrl = data.getStringExtra("mascota_imageUrl");
-
-                        Mascota nuevaMascota = new Mascota(id, nombre, edad, sexo, descripcion, categoria, color, imageUrl);
-
-                        boolean encontrada = false;
-                        for (int i = 0; i < mascotasList.size(); i++) {
-                            if (mascotasList.get(i).getId().equals(id)) {
-                                mascotasList.set(i, nuevaMascota); // actualización
-                                encontrada = true;
-                                break;
-                            }
-                        }
-
-                        if (!encontrada) {
-                            mascotasList.add(nuevaMascota); // nueva publicación
-                        }
-
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-        );
-
-        btnNewPublication.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), NewPublicationActivity.class);
-            lNewPublication.launch(intent);
-        });
-        btnNewPublication.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), NewPublicationActivity.class);
-            lNewPublication.launch(intent);
-        });
-
 
         btnLogout.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
+            mAuth.signOut();
+            getActivity().finish();
         });
 
         return view;
+    }
+
+    private void escucharPublicaciones() {
+        String userId = mAuth.getCurrentUser().getUid();
+
+        //Escucha cambios en tiempo real en Firestore
+        db.collection("publicaciones")
+                .whereEqualTo("dueñoId", userId)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (value != null) {
+                        mascotasList.clear();
+                        for (DocumentSnapshot doc : value.getDocuments()) {
+                            Mascota mascota = doc.toObject(Mascota.class);
+                            if (mascota != null) {
+                                mascota.setId(doc.getId()); // Guardamos el ID del documento
+                                mascotasList.add(mascota);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
     }
 }

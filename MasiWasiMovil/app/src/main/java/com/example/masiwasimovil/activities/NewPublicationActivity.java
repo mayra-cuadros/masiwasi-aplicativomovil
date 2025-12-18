@@ -1,6 +1,7 @@
 package com.example.masiwasimovil.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.masiwasimovil.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import models.Mascota;
 
 public class NewPublicationActivity extends AppCompatActivity {
 
@@ -18,19 +25,25 @@ public class NewPublicationActivity extends AppCompatActivity {
     private Button btnChangeImage, btnGuardar;
     private EditText edtNombre, edtEdad, edtSexo, edtCategoria, edtColor, edtDescripcion;
 
-    private boolean modoEdicion = false;
-    private String mascotaId; // Para edición
+    private Uri imageUri; // Para la imagen seleccionada
+    private FirebaseFirestore db;
+    private FirebaseStorage storage;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_publication);
 
-        // Vistas
+        // Inicializar Firebase
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        // Referenciar Vistas
         imgMascota = findViewById(R.id.imgMascota);
         btnChangeImage = findViewById(R.id.btnChangeImage);
         btnGuardar = findViewById(R.id.btnGuardar);
-
         edtNombre = findViewById(R.id.edtNombre);
         edtEdad = findViewById(R.id.edtEdad);
         edtSexo = findViewById(R.id.edtSexo);
@@ -38,48 +51,64 @@ public class NewPublicationActivity extends AppCompatActivity {
         edtColor = findViewById(R.id.edtColor);
         edtDescripcion = findViewById(R.id.edtDescripcion);
 
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("mascota_id")) {
-            modoEdicion = true;
-            mascotaId = intent.getStringExtra("mascota_id");
-            edtNombre.setText(intent.getStringExtra("mascota_nombre"));
-            edtEdad.setText(intent.getStringExtra("mascota_edad"));
-            edtSexo.setText(intent.getStringExtra("mascota_sexo"));
-            edtCategoria.setText(intent.getStringExtra("mascota_categoria"));
-            edtColor.setText(intent.getStringExtra("mascota_color"));
-            edtDescripcion.setText(intent.getStringExtra("mascota_descripcion"));
-            imgMascota.setImageResource(R.mipmap.ic_launcher);
+        // Botón para seleccionar imagen de la galería
+        btnChangeImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, 100);
+        });
+
+        btnGuardar.setOnClickListener(v -> guardarEnFirebase());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();
+            imgMascota.setImageURI(imageUri);
+        }
+    }
+
+    private void guardarEnFirebase() {
+        String nombre = edtNombre.getText().toString().trim();
+        String edad = edtEdad.getText().toString().trim();
+
+        if (nombre.isEmpty() || imageUri == null) {
+            Toast.makeText(this, "Nombre e imagen son obligatorios", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        btnChangeImage.setOnClickListener(v -> {
-            Toast.makeText(this, "Subir imagen pendiente", Toast.LENGTH_SHORT).show();
-        });
+        // 1. Subir Imagen a Storage
+        StorageReference folder = storage.getReference().child("fotos_mascotas");
+        StorageReference fileName = folder.child("img_" + System.currentTimeMillis());
 
-        btnGuardar.setOnClickListener(v -> {
-            String nombre = edtNombre.getText().toString().trim();
-            String edad = edtEdad.getText().toString().trim();
-            String sexo = edtSexo.getText().toString().trim();
-            String categoria = edtCategoria.getText().toString().trim();
-            String color = edtColor.getText().toString().trim();
-            String descripcion = edtDescripcion.getText().toString().trim();
+        fileName.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            fileName.getDownloadUrl().addOnSuccessListener(uri -> {
+                // 2. Una vez que tenemos la URL, guardamos en Firestore
+                subirDatos(nombre, edad, uri.toString());
+            });
+        }).addOnFailureListener(e -> Toast.makeText(this, "Error al subir imagen", Toast.LENGTH_SHORT).show());
+    }
 
-            if (nombre.isEmpty() || edad.isEmpty() || sexo.isEmpty() || categoria.isEmpty() || color.isEmpty()) {
-                Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show();
-                return;
-            }
+    private void subirDatos(String nombre, String edad, String urlImagen) {
+        String userId = mAuth.getCurrentUser().getUid();
 
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("mascota_id", mascotaId != null ? mascotaId : String.valueOf(System.currentTimeMillis())); // id temporal
-            resultIntent.putExtra("mascota_nombre", nombre);
-            resultIntent.putExtra("mascota_edad", edad);
-            resultIntent.putExtra("mascota_sexo", sexo);
-            resultIntent.putExtra("mascota_categoria", categoria);
-            resultIntent.putExtra("mascota_color", color);
-            resultIntent.putExtra("mascota_descripcion", descripcion);
-            resultIntent.putExtra("mascota_imageUrl", "");
+        Mascota mascota = new Mascota();
+        mascota.setNombre(nombre);
+        mascota.setEdad(edad);
+        mascota.setSexo(edtSexo.getText().toString());
+        mascota.setCategoria(edtCategoria.getText().toString());
+        mascota.setColor(edtColor.getText().toString());
+        mascota.setDescripcion(edtDescripcion.getText().toString());
+        mascota.setImageUrl(urlImagen);
+        mascota.setDuenoId(userId);
 
-            setResult(RESULT_OK, resultIntent);
-            finish();
-        });
+        db.collection("publicaciones").add(mascota)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Publicación exitosa", Toast.LENGTH_SHORT).show();
+                    finish(); // Regresa al perfil
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Error al guardar datos", Toast.LENGTH_SHORT).show());
     }
 }

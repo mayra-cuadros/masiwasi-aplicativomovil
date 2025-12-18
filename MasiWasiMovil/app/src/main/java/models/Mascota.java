@@ -12,6 +12,7 @@ public class Mascota implements Serializable {
     private String categoria;
     private String color;
     private String imageUrl;
+    private String duenoId;
 
     public Mascota() {
         // Constructor vacío requerido para Firestore
@@ -19,7 +20,7 @@ public class Mascota implements Serializable {
 
     public Mascota(String id, String nombre, String edad, String sexo,
                    String descripcion, String categoria, String color,
-                   String imageUrl) {
+                   String imageUrl, String duenoId) {
 
         this.id = id;
         this.nombre = nombre;
@@ -29,6 +30,7 @@ public class Mascota implements Serializable {
         this.categoria = categoria;
         this.color = color;
         this.imageUrl = imageUrl;
+        this.duenoId = duenoId;
     }
 
     // Getters y setters
@@ -57,4 +59,7 @@ public class Mascota implements Serializable {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getDuenoId() { return duenoId; }
+    public void setDuenoId(String duenoId) { this.duenoId = duenoId; }
 }

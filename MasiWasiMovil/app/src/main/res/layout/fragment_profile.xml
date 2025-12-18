@@ -58,7 +58,7 @@
                     android:id="@+id/txtUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mark Z."
+                    android:text="Invitado"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="mark@gmail.com"
+                    android:text="Regístrate y encuentra nuevos compañeros~"
                     android:textSize="16sp" />
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Lima, Perú"
+                    android:text="Masi Wasi"
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
@@ -92,7 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Editar perfil" />
+                android:text="Editar Adopción" />
 
             <Button
                 android:id="@+id/btnNewPublication"
@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="Nueva publicación" />
+                android:text="Nueva Adopción" />
 
             <Button
                 android:id="@+id/btnLogout"

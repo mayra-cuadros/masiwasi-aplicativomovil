@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.masiwasimovil.R;
 
 import java.util.List;
@@ -56,10 +57,10 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
         holder.txtSexo.setText(mascota.getSexo());
         holder.txtDescripcion.setText(mascota.getDescripcion());
 
-//        Glide.with(context)
-//                .load(mascota.getImageUrl())
-//                .placeholder(R.drawable.ic_launcher_foreground)
-//                .into(holder.imgMascota);
+        Glide.with(context)
+                .load(mascota.getImageUrl())
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .into(holder.imgMascota);
 
         holder.btnDetalles.setText(modoEdicion ? "Editar" : "Ver/Detalles");
 

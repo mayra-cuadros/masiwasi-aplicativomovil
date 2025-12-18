@@ -13,10 +13,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.masiwasimovil.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText edtNombre, edtCorreo, edtPass, edtPassConfirm;
     Button btnRegistrar;
+
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +33,16 @@ public class RegisterActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Inicializar Firebase
+        mAuth = FirebaseAuth.getInstance();
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
         edtNombre = findViewById(R.id.editTextText);
         edtCorreo = findViewById(R.id.editTextTextEmailAddress2);
         edtPass = findViewById(R.id.editTextTextPassword2);
@@ -34,12 +50,9 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegistrar = findViewById(R.id.button3);
 
         btnRegistrar.setOnClickListener(v -> registrarUsuario());
-
-
     }
 
     private void registrarUsuario() {
-
         String nombre = edtNombre.getText().toString().trim();
         String correo = edtCorreo.getText().toString().trim();
         String pass = edtPass.getText().toString().trim();
@@ -53,27 +66,46 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
             edtCorreo.setError("Correo inválido");
-            edtCorreo.requestFocus();
+            return;
+        }
+
+        if (pass.length() < 6) {
+            edtPass.setError("La contraseña debe tener al menos 6 caracteres");
             return;
         }
 
         if (!pass.equals(pass2)) {
             edtPassConfirm.setError("Las contraseñas no coinciden");
-            edtPassConfirm.requestFocus();
             return;
         }
 
-        // Guardar usuario en SharedPreferences
-        SharedPreferences prefs = getSharedPreferences("USUARIO", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
+        // REAR USUARIO EN FIREBASE AUTHENTICATION
+        mAuth.createUserWithEmailAndPassword(correo, pass)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // GUARDAR EL NOMBRE EN EL PERFIL DE FIREBASE
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            actualizarNombreUsuario(user, nombre);
+                        }
+                    } else {
+                        String error = task.getException() != null ? task.getException().getMessage() : "Error";
+                        Toast.makeText(this, "Error al registrar: " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
 
-        editor.putString("nombre", nombre);
-        editor.putString("correo", correo);
-        editor.putString("password", pass);
-        editor.apply();
+    private void actualizarNombreUsuario(FirebaseUser user, String nombre) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(nombre)
+                .build();
 
-        Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
-
-        finish();
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(RegisterActivity.this, "Usuario creado con éxito", Toast.LENGTH_SHORT).show();
+                        finish(); // Regresa al Login
+                    }
+                });
     }
 }

@@ -14,16 +14,39 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.masiwasimovil.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     EditText email, password;
     Button btnLogin, btnRegister;
+
+    private FirebaseAuth mAuth;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 2. Revisar si el usuario ya está logueado para entrar directo
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            irAMain();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Inicializar Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -48,82 +71,31 @@ public class LoginActivity extends AppCompatActivity {
         String correo = email.getText().toString().trim();
         String pass = password.getText().toString().trim();
 
-        // --- ADMIN ---
-        if (correo.equals("admin") && pass.equals("admin")) {
-            Toast.makeText(this, "Inicio de sesión exitoso (ADMIN)", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, DetailActivity.class);
-            startActivity(intent);
-            finish();
+        // Validaciones básicas de campos
+        if (correo.isEmpty() || pass.isEmpty()) {
+            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (correo.isEmpty()) {
-            email.setError("Ingresa tu correo");
-            email.requestFocus();
-            return;
-        }
+        // INICIO DE SESIÓN CON FIREBASE
+        mAuth.signInWithEmailAndPassword(correo, pass)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Éxito
+                        Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show();
+                        irAMain();
+                    } else {
+                        // Error (usuario no existe, contraseña mal, o sin internet)
+                        String errorMsg = task.getException() != null ? task.getException().getMessage() : "Error desconocido";
+                        Toast.makeText(this, "Fallo de autenticación: " + errorMsg, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
 
-        if (correo.contains(" ")) {
-            email.setError("El correo no debe contener espacios");
-            email.requestFocus();
-            return;
-        }
-
-        if (!correo.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            email.setError("El correo contiene caracteres inválidos");
-            email.requestFocus();
-            return;
-        }
-
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-            email.setError("Correo inválido");
-            email.requestFocus();
-            return;
-        }
-
-        if (pass.isEmpty()) {
-            password.setError("Ingresa tu contraseña");
-            password.requestFocus();
-            return;
-        }
-
-        if (pass.contains(" ")) {
-            password.setError("La contraseña no debe contener espacios");
-            password.requestFocus();
-            return;
-        }
-
-        SharedPreferences prefs = getSharedPreferences("USUARIO", MODE_PRIVATE);
-        String correoGuardado = prefs.getString("correo", null);
-        String passGuardada = prefs.getString("password", null);
-
-        if (correoGuardado == null) {
-            Toast.makeText(this, "No existe un usuario registrado.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!correo.equalsIgnoreCase(correoGuardado)) {
-            Toast.makeText(this, "El correo no coincide con el registrado", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!pass.equals(passGuardada)) {
-            Toast.makeText(this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // === USUARIO CORRECTO ===
-        Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-
-        SharedPreferences prefsSesion = getSharedPreferences("UserSession", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefsSesion.edit();
-        editor.putBoolean("isLogged", true);
-        editor.apply();
-
+    private void irAMain() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra("openProfile", true);
         startActivity(intent);
         finish();
-
     }
 }
