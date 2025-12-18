@@ -32,20 +32,17 @@ import models.Mascota;
 public class NewPublicationActivity extends AppCompatActivity {
 
     // Vistas
-    private ImageView imgMascota; // En Java se llama así, lo asociaremos a imvPhoto del XML
-    private Button btnOpenCamara, btnOpenGalery, btnGuardar; // Nuevos botones
+    private ImageView imgMascota; 
+    private Button btnOpenCamara, btnOpenGalery, btnGuardar;
     private EditText edtNombre, edtEdad, edtSexo, edtCategoria, edtColor, edtDescripcion;
 
-    private Uri imageUri; // Para la imagen seleccionada (sea de cámara o galería)
+    private Uri imageUri;
 
     // Firebase
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private FirebaseAuth mAuth;
 
-    // --- 1. LANZADORES DE ACTIVIDAD (RESULT LAUNCHERS) ---
-
-    // A) Lanzador para CÁMARA
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -62,7 +59,7 @@ public class NewPublicationActivity extends AppCompatActivity {
             }
     );
 
-    // B) Lanzador para GALERÍA
+
     private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -73,7 +70,6 @@ public class NewPublicationActivity extends AppCompatActivity {
             }
     );
 
-    // C) Lanzador de Permisos
     private final ActivityResultLauncher<String> requestCameraPermissionLauncher = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             isGranted -> {
@@ -91,21 +87,19 @@ public class NewPublicationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_publication);
 
-        // Inicializar Firebase
+
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        // --- 2. VINCULACIÓN DE VISTAS (MATCH ID JAVA <-> ID XML) ---
 
-        // ¡OJO AQUÍ! Asociamos la variable imgMascota con el ID "imvPhoto" de tu XML nuevo
         imgMascota = findViewById(R.id.imvPhoto);
 
-        // Botones nuevos del XML
+
         btnOpenCamara = findViewById(R.id.btnOpenCamara);
         btnOpenGalery = findViewById(R.id.btnOpenGalery);
 
-        // Resto de campos (Igual que antes)
+
         btnGuardar = findViewById(R.id.btnGuardar);
         edtNombre = findViewById(R.id.edtNombre);
         edtEdad = findViewById(R.id.edtEdad);
@@ -115,9 +109,6 @@ public class NewPublicationActivity extends AppCompatActivity {
         edtDescripcion = findViewById(R.id.edtDescripcion);
 
 
-        // --- 3. EVENTOS DE LOS BOTONES ---
-
-        // Botón CÁMARA
         btnOpenCamara.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
@@ -126,17 +117,15 @@ public class NewPublicationActivity extends AppCompatActivity {
             }
         });
 
-        // Botón GALERÍA
+
         btnOpenGalery.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             galleryLauncher.launch(intent);
         });
 
-        // Botón GUARDAR (Tu lógica original intacta)
         btnGuardar.setOnClickListener(v -> guardarEnFirebase());
     }
 
-    // --- MÉTODOS AUXILIARES ---
 
     private void abrirCamara() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -147,7 +136,7 @@ public class NewPublicationActivity extends AppCompatActivity {
         }
     }
 
-    // Vital: Convierte la foto de la cámara en un archivo temporal para obtener una Uri
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -155,7 +144,7 @@ public class NewPublicationActivity extends AppCompatActivity {
         return Uri.parse(path);
     }
 
-    // --- LÓGICA DE FIREBASE (INTACTA) ---
+
 
     private void guardarEnFirebase() {
         String nombre = edtNombre.getText().toString().trim();
