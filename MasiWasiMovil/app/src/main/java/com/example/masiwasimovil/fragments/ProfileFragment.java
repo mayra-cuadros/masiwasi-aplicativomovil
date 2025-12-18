@@ -1,7 +1,10 @@
 package com.example.masiwasimovil.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,8 @@ import java.util.List;
 import adapters.MascotaAdapter;
 import models.Mascota;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ProfileFragment extends Fragment {
 
     private ImageView imgUserProfile;
@@ -44,6 +49,52 @@ public class ProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
+
+
+    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null && result.getData().getExtras() != null) {
+                        Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
+
+                        if (imageBitmap != null) {
+
+                            if (imgUserProfile != null) {
+
+                                imgUserProfile.setBackground(null);
+
+                                imgUserProfile.setImageBitmap(imageBitmap);
+
+                                imgUserProfile.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                                Toast.makeText(getContext(), "¡Foto cargada exitosamente!", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Error: La cámara no devolvió imagen", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Error: Datos de cámara vacíos", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Acción cancelada", Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
+
+
+    private final ActivityResultLauncher<String> requestCameraPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    abrirCamara();
+                } else {
+                    Toast.makeText(getContext(), "Se necesita permiso para usar la cámara", Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
+
+
     public ProfileFragment() {}
 
     public static ProfileFragment newInstance() {
@@ -56,11 +107,11 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // Inicializar Firebase
+
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        // Referenciar Vistas
+
         imgUserProfile = view.findViewById(R.id.imgUserProfile);
         txtUserName = view.findViewById(R.id.txtUserName);
         txtUserEmail = view.findViewById(R.id.txtUserEmail);
@@ -69,6 +120,12 @@ public class ProfileFragment extends Fragment {
         btnNewPublication = view.findViewById(R.id.btnNewPublication);
         btnLogout = view.findViewById(R.id.btnLogout);
         rvUserPets = view.findViewById(R.id.rvUserPets);
+
+
+        imgUserProfile.setOnClickListener(v -> {
+            requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
+        });
+
 
         // Configurar RecyclerView
         rvUserPets.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -132,15 +189,40 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+
+
+    private void abrirCamara() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (getActivity() != null && intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            cameraLauncher.launch(intent);
+        } else {
+
+            try {
+                cameraLauncher.launch(intent);
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "Error al abrir cámara", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void escucharPublicaciones() {
+        if (mAuth.getCurrentUser() == null) return;
+
         String userId = mAuth.getCurrentUser().getUid();
 
+<<<<<<< HEAD
         //Escucha cambios en tiempo real en Firestore
         db.collection("mascotas")
                 .whereEqualTo("duenoId", userId)
+=======
+
+        db.collection("publicaciones")
+                .whereEqualTo("dueñoId", userId)
+>>>>>>> 6c5e6e54ca199bde83fb673562e80cb2e3a0969e
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), "Error al cargar datos", Toast.LENGTH_SHORT).show(); // Comentado para no molestar si falla la red
                         return;
                     }
 
@@ -149,7 +231,7 @@ public class ProfileFragment extends Fragment {
                         for (DocumentSnapshot doc : value.getDocuments()) {
                             Mascota mascota = doc.toObject(Mascota.class);
                             if (mascota != null) {
-                                mascota.setId(doc.getId()); // Guardamos el ID del documento
+                                mascota.setId(doc.getId());
                                 mascotasList.add(mascota);
                             }
                         }
