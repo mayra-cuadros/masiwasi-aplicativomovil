@@ -32,7 +32,7 @@ import models.Mascota;
 public class NewPublicationActivity extends AppCompatActivity {
 
     // Vistas
-    private ImageView imgMascota; 
+    private ImageView imgMascota;
     private Button btnOpenCamara, btnOpenGalery, btnGuardar;
     private EditText edtNombre, edtEdad, edtSexo, edtCategoria, edtColor, edtDescripcion;
 
