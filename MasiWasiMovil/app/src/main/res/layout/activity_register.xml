@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginHorizontal="40dp"
-                android:layout_marginTop="300dp"
+                android:layout_marginTop="340dp"
                 android:text="Nombre de Usuario:"
                 android:textSize="15dp"
                 android:textStyle="bold" />

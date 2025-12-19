@@ -22,11 +22,11 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//            if (currentUser != null) {
-//                goHome();
-//            } else {
-//                goLogin();
-//            }
+            if (currentUser != null) {
+                goHome();
+            } else {
+                goLogin();
+            }
             goHome();
 
         }, SPLASH_DELAY);

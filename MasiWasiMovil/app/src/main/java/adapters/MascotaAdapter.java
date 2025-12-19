@@ -7,15 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.masiwasimovil.R;
-
 import java.util.List;
-
 import models.Mascota;
 
 public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaViewHolder> {
@@ -24,7 +20,6 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
     private OnMascotaClickListener listener;
     private Context context;
     private boolean modoEdicion;
-
 
     public interface OnMascotaClickListener {
         void onVerDetalles(Mascota mascota);
@@ -35,6 +30,11 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
         this.mascotaList = mascotaList;
         this.listener = listener;
         this.modoEdicion = modoEdicion;
+    }
+
+    public void updateList(List<Mascota> newList) {
+        this.mascotaList = newList;
+        notifyDataSetChanged();
     }
 
     public void setModoEdicion(boolean modoEdicion) {
@@ -49,22 +49,18 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
         return new MascotaViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull MascotaViewHolder holder, int position) {
         Mascota mascota = mascotaList.get(position);
 
-
         holder.txtNombre.setText(mascota.getNombre());
-        holder.txtEdad.setText(mascota.getEdad());
-        holder.txtSexo.setText(mascota.getSexo());
+        holder.txtEdad.setText("Edad: " + mascota.getEdad()); // Mejora visual
+        holder.txtSexo.setText("Sexo: " + mascota.getSexo());
         holder.txtDescripcion.setText(mascota.getDescripcion());
-
 
         String imageUrl = mascota.getImageUrl();
 
         if (imageUrl != null && !imageUrl.isEmpty()) {
-
             Glide.with(context)
                     .load(imageUrl)
                     .placeholder(R.drawable.ic_launcher_foreground)
@@ -72,12 +68,10 @@ public class MascotaAdapter extends RecyclerView.Adapter<MascotaAdapter.MascotaV
                     .centerCrop()
                     .into(holder.imgMascota);
         } else {
-
-
             holder.imgMascota.setImageResource(R.drawable.ic_launcher_foreground);
         }
 
-        holder.btnDetalles.setText(modoEdicion ? "Editar" : "Ver/Detalles");
+        holder.btnDetalles.setText(modoEdicion ? "Editar" : "Ver Detalles");
 
         holder.btnDetalles.setOnClickListener(v -> {
             if (listener != null) {
