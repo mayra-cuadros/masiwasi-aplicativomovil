@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.DetailActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fondoPrimary"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:id="@+id/mainScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true"
+        android:background="@mipmap/detailpage">
+
+        <LinearLayout
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/fotoMascota"
+                android:layout_width="match_parent"
+                android:layout_height="337dp"
+                android:layout_margin="16dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/mascota1" />
+
+            <TextView
+                android:id="@+id/nombreMascota"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Nombre"
+                android:textColor="@color/textPrimary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupDetalles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sexo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sexo"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/edad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edad"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/categoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Categoría"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Color"
+                    android:textSize="18sp" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/textViewDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Descripción"
+                android:textColor="@color/textPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/descripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Descripción detallada"
+                android:textColor="@color/textPrimary"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/contactar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="#764b36"
+                android:text="Contactar"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@mipmap/userpage">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBarProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fondoPerfil"
+        android:elevation="4dp"
+        app:titleTextColor="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgUserProfile"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/icon_perfil_foreground" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="12dp">
+
+                <TextView
+                    android:id="@+id/txtUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Invitado"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtUserEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Masi Wasi"
+                    android:textSize="16sp" />
+
+                <TextView
+
+                    android:id="@+id/txtUserLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text=""
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+
+            <Button
+                android:id="@+id/btnEditProfile"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="Editar Adopción"
+                android:textSize="10sp"
+                android:padding="0dp"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnNewPublication"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="Nueva Adopción"
+                android:textSize="10sp"
+                android:padding="0dp"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:text="Cerrar Sesión"
+                android:textSize="10sp"
+                android:padding="0dp" />
+        </LinearLayout>
+
+        <!--        <TextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="6dp"-->
+        <!--            android:text="Mis Publicaciones"-->
+        <!--            android:textStyle="bold" />-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvUserPets"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp" />
+
+    </LinearLayout>
+</LinearLayout>

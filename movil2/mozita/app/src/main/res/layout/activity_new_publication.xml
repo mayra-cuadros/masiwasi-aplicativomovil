@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/newadoptpage">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBarNewAdopt"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top"
+        android:background="@color/fondoNew"
+        android:elevation="6dp"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:fillViewport="true"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:elevation="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+
+                <ImageView
+                    android:id="@+id/imvPhoto"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="1dp"
+                    android:background="#CCCCCC" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnOpenCamara"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Cámara" />
+
+                    <Button
+                        android:id="@+id/btnOpenGalery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Galería" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edtNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/edtEdad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Edad"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/edtSexo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Sexo" />
+
+            <EditText
+                android:id="@+id/edtCategoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Tipo de Mascota" />
+
+            <EditText
+                android:id="@+id/edtColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Color" />
+
+            <EditText
+                android:id="@+id/edtDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Descripción"
+                android:inputType="textMultiLine"
+                android:minLines="1" />
+
+            <Button
+                android:id="@+id/btnGuardar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Guardar"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btnEliminar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#A45454"
+                android:text="Eliminar Publicación"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>
