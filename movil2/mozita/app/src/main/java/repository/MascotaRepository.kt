@@ -13,4 +13,10 @@ class MascotaRepository(context: Context) {
     fun insertar(mascota: Mascota): Long {
         return dbHelper.insertarMascota(mascota)
     }
+
+    //Listar
+
+    fun obtenerMascotas(): List<Mascota> {
+        return dbHelper.obtenerTodasLasMascotas()
+    }
 }

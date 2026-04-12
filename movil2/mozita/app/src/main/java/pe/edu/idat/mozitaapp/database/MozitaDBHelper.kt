@@ -88,4 +88,36 @@ class MozitaDBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
         return db.insert(TABLE_MASCOTA, null, values)
     }
+
+
+    // --- MÉTODO PARA LEER MASCOTAS ---
+    fun obtenerTodasLasMascotas(): List<Mascota> {
+        val listaMascotas = mutableListOf<Mascota>() // <-- ¡Esta es la línea corregida!
+        val db = this.readableDatabase
+
+        // Hacemos la consulta a la tabla
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_MASCOTA", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val mascota = Mascota(
+                    id = cursor.getString(cursor.getColumnIndexOrThrow("id")),
+                    nombre = cursor.getString(cursor.getColumnIndexOrThrow("nombre")),
+                    edad = cursor.getString(cursor.getColumnIndexOrThrow("edad")),
+                    sexo = cursor.getString(cursor.getColumnIndexOrThrow("sexo")),
+                    descripcion = cursor.getString(cursor.getColumnIndexOrThrow("descripcion")),
+                    categoria = cursor.getString(cursor.getColumnIndexOrThrow("categoria")),
+                    color = cursor.getString(cursor.getColumnIndexOrThrow("color")),
+                    imageUrl = cursor.getString(cursor.getColumnIndexOrThrow("imageUrl")),
+                    duenoId = cursor.getString(cursor.getColumnIndexOrThrow("duenoId"))
+                )
+                listaMascotas.add(mascota)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return listaMascotas
+    }
+
+
+
 }
