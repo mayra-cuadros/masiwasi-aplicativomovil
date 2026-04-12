@@ -8,5 +8,6 @@
 
     <!-- Tema principal -->
     <style name="Theme.MozitaApp" parent="Base.Theme.MozitaApp" />
+    <string name="default_web_client_id">TU_ID_DE_FIREBASE</string>
 
 </resources>
