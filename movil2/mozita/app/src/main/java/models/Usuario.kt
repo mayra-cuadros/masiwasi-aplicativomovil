@@ -1,12 +1,15 @@
 package models
 
+import com.google.firebase.firestore.PropertyName
 import java.io.Serializable
 
 class Usuario : Serializable {
 
     private var id: String? = null
     private var nombre: String? = null
-    private var email: String? = null
+    @get:PropertyName("correo")
+    @set:PropertyName("correo")
+    var email: String? = null
     private var direccion: String? = null
     private var telefono: String? = null
     private var location: String? = null
@@ -54,13 +57,6 @@ class Usuario : Serializable {
         this.nombre = nombre
     }
 
-    fun getEmail(): String? {
-        return email
-    }
-
-    fun setEmail(email: String?) {
-        this.email = email
-    }
 
     fun getDireccion(): String? {
         return direccion

@@ -47,18 +47,16 @@ class MascotaAdapter(
         holder.txtSexo.text = "Sexo: ${mascota.getSexo()}"
         holder.txtDescripcion.text = mascota.getDescripcion()
 
-        val imageUrl = mascota.getImageUrl()
+        // --- LÓGICA DE IMAGEN LOCAL SEGÚN CATEGORÍA ---
+        val categoria = mascota.getCategoria()?.lowercase() ?: "otros"
 
-        if (!imageUrl.isNullOrEmpty()) {
-            Glide.with(context)
-                .load(imageUrl)
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .error(R.mipmap.mascota1)
-                .centerCrop()
-                .into(holder.imgMascota)
-        } else {
-            holder.imgMascota.setImageResource(R.drawable.ic_launcher_foreground)
+        val resourceId = when (categoria) {
+            "perro" -> R.mipmap.perro
+            "gato" -> R.mipmap.gato
+            else -> R.mipmap.otros
         }
+
+        holder.imgMascota.setImageResource(resourceId)
 
         holder.btnDetalles.text = if (modoEdicion) "Editar" else "Ver Detalles"
 

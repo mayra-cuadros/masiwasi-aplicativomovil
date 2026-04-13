@@ -45,7 +45,7 @@ class HomeFragments : Fragment() {
             mutableListOf(),
             false,
             object : OnMascotaClickListener {
-                override fun onVerDetalles(mascota: Mascota) { // 🔥 AQUÍ EL CAMBIO
+                override fun onVerDetalles(mascota: Mascota) {
                     val intent = Intent(requireContext(), DetailActivity::class.java)
                     intent.putExtra("nombre", mascota.getNombre())
                     intent.putExtra("descripcion", mascota.getDescripcion())
@@ -54,6 +54,9 @@ class HomeFragments : Fragment() {
                     intent.putExtra("edad", mascota.getEdad())
                     intent.putExtra("categoria", mascota.getCategoria())
                     intent.putExtra("color", mascota.getColor())
+
+                    intent.putExtra("duenoId", mascota.getDuenoId())
+
                     startActivity(intent)
                 }
             }
@@ -63,10 +66,10 @@ class HomeFragments : Fragment() {
 
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
-        // 🔥 CORREGIDO AQUÍ
+        // CORREGIDO AQUÍ
         homeViewModel?.getMascotas()?.observe(viewLifecycleOwner) { mascotas ->
             if (mascotas != null) {
-                adapter?.updateList(mascotas.toMutableList()) // ✅ solución
+                adapter?.updateList(mascotas.toMutableList())
             }
         }
 

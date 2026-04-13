@@ -57,7 +57,7 @@ class ProfileFragment : Fragment() {
 
         rvUserPets.layoutManager = LinearLayoutManager(requireContext())
 
-        // Adapter CORRECTO con interfaz
+        // Adapter con interfaz
         adapter = MascotaAdapter(
             requireContext(),
             mutableListOf(),
@@ -80,6 +80,7 @@ class ProfileFragment : Fragment() {
                         intent.putExtra("edad", mascota.getEdad())
                         intent.putExtra("categoria", mascota.getCategoria())
                         intent.putExtra("color", mascota.getColor())
+                        intent.putExtra("duenoId", mascota.getDuenoId())
                         startActivity(intent)
                     }
                 }
@@ -88,7 +89,7 @@ class ProfileFragment : Fragment() {
 
         rvUserPets.adapter = adapter
 
-        // 🔥 VALIDAR USUARIO
+        //  VALIDAR USUARIO
         if (mAuth.currentUser != null) {
 
             cargarDatosUsuario()

@@ -25,7 +25,7 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        // 1. Inicializar vistas
+        // Vistas
         fotoMascota = findViewById(R.id.fotoMascota)
         nombreMascota = findViewById(R.id.nombreMascota)
         sexo = findViewById(R.id.sexo)
@@ -35,7 +35,7 @@ class DetailActivity : AppCompatActivity() {
         descripcion = findViewById(R.id.descripcion)
         contactar = findViewById(R.id.contactar)
 
-        // 2. Obtener datos del Intent
+        // Obtener datos del Intent
         val nombre = intent.getStringExtra("nombre")
         val desc = intent.getStringExtra("descripcion")
         val url = intent.getStringExtra("imagenUrl")
@@ -45,7 +45,7 @@ class DetailActivity : AppCompatActivity() {
         val catTxt = intent.getStringExtra("categoria")
         val colorTxt = intent.getStringExtra("color")
 
-        // 3. Validar
+        // Validar
         if (nombre == null) {
             Toast.makeText(this, "Error al cargar datos", Toast.LENGTH_SHORT).show()
             finish()
@@ -54,15 +54,18 @@ class DetailActivity : AppCompatActivity() {
 
         llenarPantalla(nombre, desc, url, sexoTxt, edadTxt, catTxt, colorTxt)
 
-        // 4. Botón contactar
+        val duenoId = intent.getStringExtra("duenoId")
+
+        // Botón contactar
         contactar.setOnClickListener {
-            Toast.makeText(this, "Redirigiendo al perfil del dueño...", Toast.LENGTH_SHORT).show()
-
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("navigateTo", "profile")
-            startActivity(intent)
-
-            finish()
+            if (duenoId != null) {
+                val intent = Intent(this, PersonActivity::class.java)
+                // Pasamos el ID real para que PersonActivity haga la consulta
+                intent.putExtra("DUENO_ID", duenoId)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "ID de dueño no disponible", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -84,11 +87,16 @@ class DetailActivity : AppCompatActivity() {
         categoria.text = "Categoría: ${ct ?: "N/A"}"
         color.text = "Color: ${cl ?: "N/A"}"
 
-        // Cargar imagen con Glide
-        Glide.with(this)
-            .load(u)
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.mipmap.mascota1)
-            .into(fotoMascota)
+        // Lógica de imagen local
+        val categoriaTxt = ct?.lowercase() ?: "otros"
+
+        val resourceId = when (categoriaTxt) {
+            "perro" -> R.mipmap.perro
+            "gato" -> R.mipmap.gato
+            else -> R.mipmap.otros
+        }
+
+        // Se asigna el recurso directamente
+        fotoMascota.setImageResource(resourceId)
     }
 }
