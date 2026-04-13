@@ -9,9 +9,19 @@ class UsuarioRepository(context: Context) {
     // Instanciamos
     private val dbHelper = MozitaDBHelper(context)
 
-    // guardar
+    // guardar SQLite
 
     fun insertar(usuario: Usuario): Long {
         return dbHelper.insertarUsuario(usuario)
+    }
+
+    // actualizar SQLite
+    fun actualizar(usuario: Usuario): Int {
+        return dbHelper.actualizarUsuario(usuario)
+    }
+
+    // borrar  SQLite
+    fun eliminar(idUsuario: String): Int {
+        return dbHelper.eliminarUsuario(idUsuario)
     }
 }

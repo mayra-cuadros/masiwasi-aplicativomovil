@@ -71,6 +71,23 @@ class MozitaDBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return db.insertWithOnConflict(TABLE_USUARIO, null, values, SQLiteDatabase.CONFLICT_REPLACE)
     }
 
+    fun actualizarUsuario(usuario: Usuario): Int {
+        val db = this.writableDatabase
+        val values = android.content.ContentValues().apply {
+            put("nombre", usuario.getNombre())
+            put("direccion", usuario.getDireccion())
+            put("telefono", usuario.getTelefono())
+            put("imageUrl", usuario.getImageUrl())
+        }
+        return db.update(TABLE_USUARIO, values, "id=?", arrayOf(usuario.getId()))
+    }
+
+    fun eliminarUsuario(idUsuario: String): Int {
+        val db = this.writableDatabase
+        // Eliminamos el registro donde el 'id' coincida
+        return db.delete(TABLE_USUARIO, "id=?", arrayOf(idUsuario))
+    }
+
     // --- MÉTODOS PARA MASCOTA ---
     fun insertarMascota(mascota: Mascota): Long {
         val db = this.writableDatabase
