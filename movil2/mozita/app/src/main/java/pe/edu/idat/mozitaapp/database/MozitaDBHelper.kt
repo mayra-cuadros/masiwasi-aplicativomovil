@@ -68,7 +68,7 @@ class MozitaDBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             put("imageUrl", usuario.getImageUrl())
         }
 
-        return db.insert(TABLE_USUARIO, null, values)
+        return db.insertWithOnConflict(TABLE_USUARIO, null, values, SQLiteDatabase.CONFLICT_REPLACE)
     }
 
     // --- MÉTODOS PARA MASCOTA ---
@@ -86,7 +86,7 @@ class MozitaDBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
             put("duenoId", mascota.getDuenoId())
         }
 
-        return db.insert(TABLE_MASCOTA, null, values)
+        return db.insertWithOnConflict(TABLE_MASCOTA, null, values, SQLiteDatabase.CONFLICT_REPLACE)
     }
 
 
