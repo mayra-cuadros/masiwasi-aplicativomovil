@@ -12,11 +12,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import models.Mascota
+import models.Usuario
 import pe.edu.idat.mozitaapp.R
 import pe.edu.idat.mozitaapp.activities.DetailActivity
 import pe.edu.idat.mozitaapp.activities.LoginActivity
 import pe.edu.idat.mozitaapp.activities.NewPublicationActivity
 import pe.edu.idat.mozitaapp.activities.RegisterActivity
+import pe.edu.idat.mozitaapp.activities.UserProfileActivity
+import repository.MascotaRepository
+import repository.UsuarioRepository
 
 class ProfileFragment : Fragment() {
 
@@ -34,6 +38,10 @@ class ProfileFragment : Fragment() {
     private lateinit var db: FirebaseFirestore
     private lateinit var mAuth: FirebaseAuth
 
+    // Repositorios locales
+    private lateinit var usuarioRepository: UsuarioRepository
+    private lateinit var mascotaRepository: MascotaRepository
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,6 +53,10 @@ class ProfileFragment : Fragment() {
         // Firebase
         db = FirebaseFirestore.getInstance()
         mAuth = FirebaseAuth.getInstance()
+
+        // Inicializamos repositorios
+        usuarioRepository = UsuarioRepository(requireContext())
+        mascotaRepository = MascotaRepository(requireContext())
 
         // Vistas
         txtUserName = view.findViewById(R.id.txtUserName)
@@ -103,6 +115,11 @@ class ProfileFragment : Fragment() {
                 startActivity(intent)
             }
 
+            //  Tocar el nombre para ir a Editar el Perfil
+            txtUserName.setOnClickListener {
+                startActivity(Intent(requireContext(), UserProfileActivity::class.java))
+            }
+
         } else {
 
             txtUserName.text = "Invitado"
@@ -137,9 +154,17 @@ class ProfileFragment : Fragment() {
         db.collection("usuarios").document(userId).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
-                    txtUserName.text = doc.getString("nombre")
-                    txtUserEmail.text = doc.getString("correo")
-                    txtUserLocation.text = doc.getString("direccion")
+                    val nombre = doc.getString("nombre") ?: ""
+                    val correo = doc.getString("correo") ?: ""
+                    val direccion = doc.getString("direccion") ?: ""
+
+                    txtUserName.text = nombre
+                    txtUserEmail.text = correo
+                    txtUserLocation.text = direccion
+
+                    // 🌟 Guardamos/Actualizamos el perfil en SQLite para uso offline
+                    val usuarioAct = Usuario(userId, nombre, correo, direccion, "", "", "", null)
+                    usuarioRepository.insertar(usuarioAct)
                 }
             }
     }
@@ -147,20 +172,25 @@ class ProfileFragment : Fragment() {
     private fun escucharPublicacionesMias() {
         val userId = mAuth.currentUser?.uid ?: return
 
+        // Cargardesde SQLite las mascotas de este dueño
+        try {
+            val listaLocal = mascotaRepository.obtenerMascotas().filter { it.getDuenoId() == userId }
+            adapter.updateList(listaLocal.toMutableList())
+        } catch (e: Exception) { }
+
+        // Actualizar desde Firebase y guardar en local
         db.collection("mascotas")
             .whereEqualTo("duenoId", userId)
             .addSnapshotListener { value, _ ->
-
                 val lista = mutableListOf<Mascota>()
-
                 value?.documents?.forEach { doc: DocumentSnapshot ->
                     val mascota = doc.toObject(Mascota::class.java)
                     mascota?.let {
                         it.setId(doc.id)
                         lista.add(it)
+                        mascotaRepository.insertar(it) // Sincroniza SQLite
                     }
                 }
-
                 adapter.updateList(lista)
             }
     }

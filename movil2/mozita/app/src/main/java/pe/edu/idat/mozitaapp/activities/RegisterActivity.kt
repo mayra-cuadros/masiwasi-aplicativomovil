@@ -8,7 +8,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
+import models.Usuario
 import pe.edu.idat.mozitaapp.R
+import repository.UsuarioRepository
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var edtNombre: EditText
@@ -21,6 +23,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
+    // Declaramos nuestro repositorio usuario
+    private lateinit var usuarioRepository: UsuarioRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +34,7 @@ class RegisterActivity : AppCompatActivity() {
         // Firebase
         mAuth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        usuarioRepository = UsuarioRepository(this)
 
         // Vistas
         edtNombre = findViewById(R.id.editTextText)
@@ -79,6 +84,24 @@ class RegisterActivity : AppCompatActivity() {
                             .build()
 
                         it.updateProfile(profileUpdates)
+
+                        // SQLITE
+                        // objeto Usuario
+                        //
+
+                        val nuevoUsuario = Usuario(
+                            id = userId,
+                            nombre = nombre,
+                            email = correo,
+                            direccion = direccion,
+                            telefono = "",
+                            location = "",
+                            imageUrl = "",
+                            mascotas = null
+                        )
+
+                        // Lo insertamos en la base de datos local SQLite
+                        usuarioRepository.insertar(nuevoUsuario)
 
                         // 🔥 Guardar en Firestore
                         val userMap = hashMapOf(

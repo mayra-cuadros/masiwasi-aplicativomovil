@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation("com.google.android.gms:play-services-auth:21.0.1")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 
     testImplementation(libs.junit)

@@ -90,6 +90,15 @@
                 android:text="Registrarse"
                 android:textSize="15dp" />
 
+            <Button
+                android:id="@+id/btnGoogle"
+                android:layout_width="194dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#DB4437"
+                android:text="Google"
+                android:textColor="@android:color/white" />
+
         </LinearLayout>
 
     </ScrollView>

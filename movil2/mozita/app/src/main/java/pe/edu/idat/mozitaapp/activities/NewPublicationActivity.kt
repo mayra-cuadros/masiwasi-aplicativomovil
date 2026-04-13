@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import repository.MascotaRepository
 
 class NewPublicationActivity : AppCompatActivity() {
 
@@ -46,6 +47,9 @@ class NewPublicationActivity : AppCompatActivity() {
     private var db: FirebaseFirestore? = null
     private var storage: FirebaseStorage? = null
     private var mAuth: FirebaseAuth? = null
+
+    //  Declaramos nuestro repositorio
+    private lateinit var mascotaRepository: MascotaRepository
 
     private val cameraLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK && result.data != null) {
@@ -79,6 +83,9 @@ class NewPublicationActivity : AppCompatActivity() {
         storage = FirebaseStorage.getInstance()
         mAuth = FirebaseAuth.getInstance()
 
+        //  Inicializamos el repositorio pasándole el contexto
+        mascotaRepository = MascotaRepository(this)
+
         imgMascota = findViewById(R.id.imvPhoto)
         btnOpenCamara = findViewById(R.id.btnOpenCamara)
         btnOpenGalery = findViewById(R.id.btnOpenGalery)
@@ -99,6 +106,7 @@ class NewPublicationActivity : AppCompatActivity() {
         }
 
         if (esEdicion) {
+
             btnEliminar?.visibility = View.VISIBLE
             btnEliminar?.setOnClickListener { confirmarEliminacion() }
         }
@@ -208,6 +216,11 @@ class NewPublicationActivity : AppCompatActivity() {
         mascota.setDuenoId(userId)
 
         if (esEdicion) {
+
+            // Si estamos editando, mantenemos el ID original y lo guardamos localmente
+            mascota.setId(mascotaId)
+            mascotaRepository.insertar(mascota)
+
             db?.collection("mascotas")?.document(mascotaId!!)
                 ?.set(mascota)
                 ?.addOnSuccessListener {
@@ -218,8 +231,16 @@ class NewPublicationActivity : AppCompatActivity() {
                     Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
                 }
         } else {
-            db?.collection("mascotas")
-                ?.add(mascota)
+
+            // Si es nueva, le pedimos a Firebase que genere el ID vacío primero
+            val nuevaReferencia = db?.collection("mascotas")?.document()
+            mascota.setId(nuevaReferencia?.id) // Le pasamos ese ID a nuestro objeto
+
+            // Guardamos localmente en SQLite
+            mascotaRepository.insertar(mascota)
+
+            // Y por último, guardamos en la nube usando el SET en vez del ADD
+            nuevaReferencia?.set(mascota)
                 ?.addOnSuccessListener {
                     Toast.makeText(this, "¡Mascota publicada!", Toast.LENGTH_SHORT).show()
                     finish()
