@@ -109,7 +109,7 @@ class MozitaDBHelper (context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
     // --- MÉTODO PARA LEER MASCOTAS ---
     fun obtenerTodasLasMascotas(): List<Mascota> {
-        val listaMascotas = mutableListOf<Mascota>() // <-- ¡Esta es la línea corregida!
+        val listaMascotas = mutableListOf<Mascota>()
         val db = this.readableDatabase
 
         // Hacemos la consulta a la tabla
